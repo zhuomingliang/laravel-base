@@ -18,21 +18,21 @@ class PermissionsDemoSeeder extends Seeder {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create([['guard_name' => 'admin', 'name' => 'edit articles']);
-        Permission::create([['guard_name' => 'admin', 'name' => 'delete articles']);
-        Permission::create([['guard_name' => 'admin', 'name' => 'publish articles']);
-        Permission::create([['guard_name' => 'admin', 'name' => 'unpublish articles']);
+        Permission::create(['guard_name' => 'admin', 'name' => 'edit articles']);
+        Permission::create(['guard_name' => 'admin', 'name' => 'delete articles']);
+        Permission::create(['guard_name' => 'admin', 'name' => 'publish articles']);
+        Permission::create(['guard_name' => 'admin', 'name' => 'unpublish articles']);
 
         // create roles and assign existing permissions
-        $role1 = Role::create([['guard_name' => 'admin', 'name' => 'writer']);
+        $role1 = Role::create(['guard_name' => 'admin', 'name' => 'writer']);
         $role1->givePermissionTo('edit articles');
         $role1->givePermissionTo('delete articles');
 
-        $role2 = Role::create([['guard_name' => 'admin', 'name' => 'admin']);
+        $role2 = Role::create(['guard_name' => 'admin', 'name' => 'admin']);
         $role2->givePermissionTo('publish articles');
         $role2->givePermissionTo('unpublish articles');
 
-        $role3 = Role::create([['guard_name' => 'admin', 'name' => 'Super-Admin']);
+        $role3 = Role::create(['guard_name' => 'admin', 'name' => 'Super-Admin']);
         // gets all permissions via Gate::before rule; see AuthServiceProvider
 
         // create demo users

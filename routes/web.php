@@ -22,7 +22,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-//万能路由
+// 万能路由
 // Route::group(['middleware'=>['web']], function () {
     Route::any('/{controller}/{action}', function ($controller, $action) {
         $controller = 'App\\Http\\Controllers\\' . ucfirst(strtolower($controller)) . 'Controller';
