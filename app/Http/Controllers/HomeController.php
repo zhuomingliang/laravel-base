@@ -25,6 +25,13 @@ class HomeController extends Controller {
     }
 
     public function getUser(User $user) {
-        dd($user);
+        $this->registerMacroHelpers();
+        dd(\Auth::guard()->getGuardName(), $user);
+    }
+
+    private function registerMacroHelpers() {
+        \Auth::guard()::macro('getGuardName', function () {
+            return $this->name;
+        });
     }
 }
