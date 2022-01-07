@@ -44,7 +44,3 @@ Route::post('/sanctum/token', function (Request $request) {
 
     return $user->createToken($request->device_name)->plainTextToken;
 });
-
-Route::middleware('auth:sanctum')->any('/user', function (Request $request) {
-    return $request->user();
-});
