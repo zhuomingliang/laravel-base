@@ -24,7 +24,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 // 万能路由
 // Route::group(['middleware'=>['web']], function () {
-    Route::middleware('auth:sanctum,admin,web')->any('/{controller}/{action}', function ($controller, $action) {
+    Route::middleware('auth:sanctum,admin,web')->any('/{controller}/{action?}', function ($controller, $action = 'index') {
         $controller = 'App\\Http\\Controllers\\' . ucfirst(strtolower($controller)) . 'Controller';
 
         if (class_exists($controller)) {

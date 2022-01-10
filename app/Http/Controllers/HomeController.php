@@ -12,7 +12,7 @@ class HomeController extends Controller {
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth:admin,web'); // 允许 web 和 admin 两个guard 访问该控制器
+        $this->middleware('auth:admin,web'); // 允许 web 和 admin 两个 guard 访问该控制器
     }
 
     /**
