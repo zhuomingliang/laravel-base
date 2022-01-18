@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use App\Http\Requests\Permission\CreateOrUpdateRequest;
 use App\Models\Permission;
 use App\Resources\Collection;
@@ -35,7 +34,7 @@ class PermissionController extends Controller {
         $result = Permission::query()->find((int)$request->get('id', 0));
 
         if (!$result) {
-            return $this->noContent();
+            return $this->unprocessableEntity();
         }
 
         return new PermissionResource($result);
