@@ -15,7 +15,7 @@ use Auth;
 class PermissionController extends Controller {
     /**
      * @param Request $request
-     * @return PermissionCollection
+     * @return Collection
      */
     public function getIndex(Request $request) {
         $permissions =tap(Permission::latest(), function ($query) use ($request) {
@@ -44,9 +44,11 @@ class PermissionController extends Controller {
             'pg_id', 'cname', 'name', 'guard_name', 'icon', 'sequence', 'description'
         ]);
 
-        $attributes['created_name'] = Auth::user()->name;
-
-        Permission::create($attributes);
+        try {
+            \DB::table('permissions')->insert($attributes);
+        } catch (\Exception $e) {
+            return $this->conflict('已存在该权限');
+        }
 
         return $this->created();
     }
@@ -56,25 +58,16 @@ class PermissionController extends Controller {
      * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function putIndex(CreateOrUpdateRequest $request, $id) {
-        $permission = Permission::query()->findOrFail($id);
-
+    public function putIndex(CreateOrUpdateRequest $request) {
         $attributes = $request->only([
             'pg_id', 'cname', 'name', 'guard_name', 'icon', 'sequence', 'description'
         ]);
 
-        $attributes['updated_name'] = Auth::user()->name;
-
-        $isset = Permission::query()
-            ->where(['name' => $attributes['name'], 'guard_name' => $attributes['guard_name']])
-            ->where('id', '!=', $id)
-            ->count();
-
-        if ($isset) {
-            throw PermissionAlreadyExists::create($attributes['name'], $attributes['guard_name']);
+        try {
+            \DB::table('permissions')->update($attributes);
+        } catch (\Exception $e) {
+            return $this->conflict('已存在该权限');
         }
-
-        $permission->update($attributes);
 
         return $this->noContent();
     }

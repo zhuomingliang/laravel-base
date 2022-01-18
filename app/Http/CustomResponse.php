@@ -77,6 +77,19 @@ trait CustomResponse {
     }
 
     /**
+     * 409
+     * @param string $message
+     * @param array $headers
+     * @param int $options
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function conflict($message = '', array $headers = [], $options = 0) {
+        return response()->json([
+            'message' => $message ? $message : 'Insufficient permissions.'
+        ], Response::HTTP_CONFLICT, $headers, $options);
+    }
+
+    /**
      * 422
      *
      * @param array $errors

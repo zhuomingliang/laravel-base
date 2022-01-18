@@ -26,11 +26,12 @@ class CreatePermissionTables extends Migration {
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('pg_id')->default(0);
+            $table->string('icon', 32)->default('')->comment('图标');
             $table->string('cname', 32)->comment('权限中文名称');
             $table->string('name')->comment('权限名称，用于权限验证');       // For MySQL 8.0 use string('name', 125);
-            $table->string('icon', 32)->default('')->comment('图标');
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
             $table->string('description')->default('')->comment('描述');
+            $table->smallInteger('sequence')->default(0)->comment('顺序');
             $table->timestamps();
 
             $table->unique(['name', 'guard_name']);
