@@ -23,9 +23,11 @@ class ExampleTest extends TestCase {
 
         $this->actingAs($user, 'admin');
 
-        $this->get('/permission')->assertJsonStructure();
+        $this->getJson('/permission')->assertJsonStructure();
 
-        $this->post('/permission', [
+        $this->getJson('/permission/detail?id=xxx')->assertStatus(204);
+
+        $this->postJson('/permission', [
             'id'    => 1,
             'pg_id' => 1,
             'cname' => 'Permission',
@@ -34,6 +36,8 @@ class ExampleTest extends TestCase {
             'icon' => 'icon-user',
             'sequence' => 1,
             'description' => 'permission'
-        ], ['X-Requested-With' => 'XMLHttpRequest', 'Accept' => '*/*'])->assertJsonStructure();
+        ])->assertStatus(409);
+
+        $this->delete('/permission?id=xxx')->assertStatus(422);
     }
 }

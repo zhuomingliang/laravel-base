@@ -28,11 +28,17 @@ class PermissionController extends Controller {
     }
 
     /**
-     * @param $id
+     * @param Request $request
      * @return PermissionResource
      */
-    public function getDetail($id) {
-        return new PermissionResource(Permission::query()->findOrFail($id));
+    public function getDetail(Request $request) {
+        $result = Permission::query()->find((int)$request->get('id', 0));
+
+        if (!$result) {
+            return $this->noContent();
+        }
+
+        return new PermissionResource($result);
     }
 
     /**
@@ -55,7 +61,6 @@ class PermissionController extends Controller {
 
     /**
      * @param CreateOrUpdateRequest $request
-     * @param $id
      * @return \Illuminate\Http\Response
      */
     public function putIndex(CreateOrUpdateRequest $request) {
@@ -73,13 +78,18 @@ class PermissionController extends Controller {
     }
 
     /**
-     * @param $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function deleteIndex($id) {
-        permission::query()->findOrFail($id)->delete();
+    public function deleteIndex(Request $request) {
+        try {
+            if (\DB::table('permissions')->where('id', (int)$request->get('id', 0))->delete()) {
+                return $this->noContent();
+            };
+        } catch (\Exception $e) {
+        }
 
-        return $this->noContent();
+        return $this->unprocessableEntity();
     }
 
     /**
