@@ -17,7 +17,7 @@ class PermissionController extends Controller {
      * @return Collection
      */
     public function getIndex(Request $request) {
-        $permissions =tap(Permission::latest(), function ($query) use ($request) {
+        $permissions = tap(Permission::latest(), function ($query) use ($request) {
             $query->where($request->only([
                 'name', 'guard_name', 'pg_id'
             ]));
@@ -31,7 +31,7 @@ class PermissionController extends Controller {
      * @return PermissionResource
      */
     public function getDetail(Request $request) {
-        $result = Permission::query()->find((int)$request->get('id', 0));
+        $result = Permission::find((int)$request->get('id', 0));
 
         if (!$result) {
             return $this->unprocessableEntity();
@@ -45,12 +45,10 @@ class PermissionController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function postIndex(CreateOrUpdateRequest $request) {
-        $attributes = $request->only([
-            'pg_id', 'cname', 'name', 'guard_name', 'icon', 'sequence', 'description'
-        ]);
-
         try {
-            \DB::table('permissions')->insert($attributes);
+            \DB::table('permissions')->insert($request->only([
+                'pg_id', 'cname', 'name', 'guard_name', 'icon', 'sequence', 'description'
+            ]));
         } catch (\Exception $e) {
             return $this->conflict('已存在该权限');
         }
@@ -63,12 +61,10 @@ class PermissionController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function putIndex(CreateOrUpdateRequest $request) {
-        $attributes = $request->only([
-            'pg_id', 'cname', 'name', 'guard_name', 'icon', 'sequence', 'description'
-        ]);
-
         try {
-            \DB::table('permissions')->update($attributes);
+            \DB::table('permissions')->where('id', (int)$request->get('id', 0))->update($request->only([
+                'pg_id', 'cname', 'name', 'guard_name', 'icon', 'sequence', 'description'
+            ]));
         } catch (\Exception $e) {
             return $this->conflict('已存在该权限');
         }

@@ -25,10 +25,9 @@ class ExampleTest extends TestCase {
 
         $this->getJson('/permission')->assertJsonStructure();
 
-        $this->getJson('/permission/detail?id=xxx')->assertStatus(204);
+        $this->getJson('/permission/detail?id=xxx')->assertStatus(422);
 
         $this->postJson('/permission', [
-            'id'    => 1,
             'pg_id' => 1,
             'cname' => 'Permission',
             'name' => 'account',
@@ -37,6 +36,18 @@ class ExampleTest extends TestCase {
             'sequence' => 1,
             'description' => 'permission'
         ])->assertStatus(409);
+
+        $this->putJson('/permission', [
+            'id'    => 49,
+            'pg_id' => 1,
+            'cname' => 'Permission',
+            'name' => 's',
+            'guard_name' => 'admin',
+            'icon' => 'icon-user',
+            'sequence' => 1,
+            'description' => 'permission'
+        ])->assertStatus(409);
+
 
         $this->delete('/permission?id=xxx')->assertStatus(422);
     }

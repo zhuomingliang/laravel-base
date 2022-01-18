@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\PermissionGroup\CreateOrUpdateRequest;
 use App\Models\PermissionGroup;
-use App\Models\Permission;
 use App\Resources\Collection;
 use App\Resources\PermissionGroup as PermissionGroupResource;
 
@@ -53,47 +52,57 @@ class PermissionGroupController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function postIndex(CreateOrUpdateRequest $request) {
-        PermissionGroup::create($request->only(['name']));
+        try {
+            \DB::table('permission_groups')->insert($request->only(['name']));
+        } catch (\Exception $e) {
+            return $this->conflict('已存在该权限组');
+        }
 
         return $this->created();
     }
 
     /**
-     * @param $id
+     * @param Request $request
      * @return PermissionGroupResource
      */
-    public function getDetail($id) {
-        return new PermissionGroupResource(PermissionGroup::findOrFail($id));
+    public function getDetail(Request $request) {
+        $result = PermissionGroup::find((int)$request->get('id', 0));
+
+        if (!$result) {
+            return $this->unprocessableEntity();
+        }
+
+        return new PermissionGroupResource($result);
     }
 
     /**
      * @param CreateOrUpdateRequest $request
-     * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function putIndex(CreateOrUpdateRequest $request, $id) {
-        PermissionGroup::findOrFail($id)->update($request->only([
-            'name'
-        ]));
+    public function putIndex(CreateOrUpdateRequest $request) {
+        try {
+            \DB::table('permission_groups')->where('id', (int)$request->get('id', 0))->update($request->only([
+                'name'
+            ]));
+        } catch (\Exception $e) {
+            return $this->conflict('已存在该权限');
+        }
 
         return $this->noContent();
     }
 
     /**
-     * @param $id
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
-    public function deleteIndex($id) {
-        $permissionGroup = PermissionGroup::findOrFail($id);
-
-        if (Permission::query()->where('pg_id', $permissionGroup->id)->count()) {
-            return $this->unprocessableEntity([
-                'pg_id' => 'Please move or delete the vesting permission.'
-            ]);
+    public function deleteIndex(Request $request) {
+        try {
+            if (\DB::table('permission_groups')->where('id', (int)$request->get('id', 0))->delete()) {
+                return $this->noContent();
+            };
+        } catch (\Exception $e) {
         }
 
-        $permissionGroup->delete();
-
-        return $this->noContent();
+        return $this->unprocessableEntity();
     }
 }
