@@ -18,38 +18,40 @@ class PermissionsDemoSeeder extends Seeder {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['guard_name' => 'admin', 'name' => 'edit articles']);
-        Permission::create(['guard_name' => 'admin', 'name' => 'delete articles']);
-        Permission::create(['guard_name' => 'admin', 'name' => 'publish articles']);
-        Permission::create(['guard_name' => 'admin', 'name' => 'unpublish articles']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '用户管理', 'name' => 'user']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '创建用户', 'name' => 'user/postIndex']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '用户列表', 'name' => 'user/putIndex']);
+
+        Permission::create(['guard_name' => 'admin', 'cname' => '角色管理', 'name' => 'role']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '权限管理', 'name' => 'permission']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '系统日志', 'name' => 'SystemLog']);
 
         // create roles and assign existing permissions
-        $role1 = Role::create(['guard_name' => 'admin', 'name' => 'writer']);
-        $role1->givePermissionTo('edit articles');
-        $role1->givePermissionTo('delete articles');
+        $role1 = Role::create(['guard_name' => 'admin', 'name' => '系统管理员']);
+        $role1->givePermissionTo('user');
+        $role1->givePermissionTo('user/postIndex');
 
-        $role2 = Role::create(['guard_name' => 'admin', 'name' => 'admin']);
-        $role2->givePermissionTo('publish articles');
-        $role2->givePermissionTo('unpublish articles');
+        $role2 = Role::create(['guard_name' => 'admin', 'name' => '维护管理员']);
+        $role2->givePermissionTo('SystemLog');
 
-        $role3 = Role::create(['guard_name' => 'admin', 'name' => 'Super-Admin']);
+        $role3 = Role::create(['guard_name' => 'admin', 'name' => '超级管理员']);
         // gets all permissions via Gate::before rule; see AuthServiceProvider
 
         // create demo users
         $user = \App\Models\User::factory()->create([
-            'name' => 'Example User',
+            'name' => 'Example',
             'email' => 'test@example.com',
         ]);
         $user->assignRole($role1);
 
         $user = \App\Models\User::factory()->create([
-            'name' => 'Example Admin User',
+            'name' => 'ExampleAdmin',
             'email' => 'admin@example.com',
         ]);
         $user->assignRole($role2);
 
         $user = \App\Models\User::factory()->create([
-            'name' => 'Example Super-Admin User',
+            'name' => 'ExampleSuperAdmin',
             'email' => 'superadmin@example.com',
         ]);
         $user->assignRole($role3);

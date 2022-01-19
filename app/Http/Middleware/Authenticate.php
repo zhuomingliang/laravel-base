@@ -32,7 +32,15 @@ class Authenticate extends Middleware {
     public function handle($request, Closure $next, ...$guards) {
         $this->authenticate($request, $guards);
 
-        if ($request->user()->can($request->path())) {
+        $path = trim($request->path(), '\\');
+        $paths = explode('\\', $path, 2);
+
+        if (!isset($paths[1]) && isset($paths[0])) {
+            $method = strtolower($request->method());
+            $path = "{$paths[0]}/{$method}Index";
+        }
+
+        if ($request->user()->can($path)) {
             return $next($request);
         }
 
