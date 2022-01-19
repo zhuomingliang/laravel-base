@@ -18,13 +18,13 @@ class PermissionsDemoSeeder extends Seeder {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['guard_name' => 'admin', 'cname' => '用户管理', 'name' => 'user']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '用户管理', 'name' => 'user/getIndex']);
         Permission::create(['guard_name' => 'admin', 'cname' => '创建用户', 'name' => 'user/postIndex']);
-        Permission::create(['guard_name' => 'admin', 'cname' => '用户列表', 'name' => 'user/putIndex']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '修改用户', 'name' => 'user/putIndex']);
 
-        Permission::create(['guard_name' => 'admin', 'cname' => '角色管理', 'name' => 'role']);
-        Permission::create(['guard_name' => 'admin', 'cname' => '权限管理', 'name' => 'permission']);
-        Permission::create(['guard_name' => 'admin', 'cname' => '系统日志', 'name' => 'SystemLog']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '角色管理', 'name' => 'role/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '权限管理', 'name' => 'permission/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '系统日志', 'name' => 'SystemLog/getIndex']);
 
         // create roles and assign existing permissions
         $role1 = Role::create(['guard_name' => 'admin', 'name' => '系统管理员']);
