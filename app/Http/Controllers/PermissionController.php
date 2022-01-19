@@ -86,11 +86,4 @@ class PermissionController extends Controller {
 
         return $this->unprocessableEntity();
     }
-
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getAllUserPermissions() {
-        return new Collection(Auth::user()->getAllPermissions()->pluck('name'));
-    }
 }
