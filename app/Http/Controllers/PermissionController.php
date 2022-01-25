@@ -9,8 +9,6 @@ use App\Models\Permission;
 use App\Resources\Collection;
 use App\Resources\Permission as PermissionResource;
 
-use Auth;
-
 class PermissionController extends Controller {
     /**
      * @param Request $request

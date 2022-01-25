@@ -8,7 +8,7 @@ use App\Models\PermissionGroup;
 use App\Resources\Collection;
 use App\Resources\PermissionGroup as PermissionGroupResource;
 
-class PermissionGroupController extends Controller {
+class PermissiongroupController extends Controller {
     /**
      * @param Request $request
      * @return Collection
@@ -16,9 +16,9 @@ class PermissionGroupController extends Controller {
     public function getIndex(Request $request) {
         $permissionGroups = tap(PermissionGroup::latest(), function ($query) use ($request) {
             $query->where($request->only(['name']));
-        })->paginate();
+        })->paginate(20);
 
-        return new Collection($permissionGroups);
+        return $permissionGroups;
     }
 
     /**
@@ -43,7 +43,7 @@ class PermissionGroupController extends Controller {
             });
 
         return response()->json([
-            'data' => array_values($permissionGroups->toArray())
+            'data' => $permissionGroups->toArray()
         ]);
     }
 
