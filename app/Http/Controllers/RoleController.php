@@ -39,21 +39,37 @@ class RoleController extends Controller {
      * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function putIndex(CreateOrUpdateRequest $request, $id) {
+    public function putIndex(CreateOrUpdateRequest $request) {
         // if (Role::where($request->only(['name', 'guard_name']))->where('id', '!=', $id)->count()) {
         //     throw RoleAlreadyExists::create($request->name, $request->guard_name);
         // }
 
-        $role = Role::query()->findOrFail($id);
+        $role = Role::query()->findOrFail((int) $request->get('id'));
 
         try {
             $role->update($request->only([
-                'name', 'guard_name', 'description'
+                'name', 'guard_name', 'description', 'status'
             ]));
         } catch (\Exception $e) {
             throw RoleAlreadyExists::create($request->name, $request->guard_name);
         }
 
+        return $this->noContent();
+    }
+
+    /**
+     * @param CreateOrUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function putStatus(Request $request) {
+        $role = Role::query()->findOrFail((int) $request->get('id'));
+
+        try {
+            $role->update($request->only(['status']));
+        } catch (\Exception $e) {
+            throw RoleAlreadyExists::create($request->name, $request->guard_name);
+        }
 
         return $this->noContent();
     }

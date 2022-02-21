@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class LoginController extends Controller {
     /*
@@ -44,5 +46,37 @@ class LoginController extends Controller {
      */
     protected function guard() {
         return Auth::guard('admin'); // 默认用 admin guard 登录，可以根据用户类型来确定该用 web 还是 admin guard
+    }
+
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username() {
+        return 'username';
+    }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendLoginResponse(Request $request) {
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        if ($response = $this->authenticated($request, $this->guard()->user())) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+                    ? new JsonResponse([
+                        'userId' => $this->guard()->user()->id,
+                        'username' => $this->guard()->user()->username],
+                        200)
+                    : redirect()->intended($this->redirectPath());
     }
 }

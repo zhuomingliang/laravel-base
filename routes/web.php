@@ -41,6 +41,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
             }
         }
 
+        if (env('APP_DEBUG') === true) {
+            throw new \RuntimeException("{$controller} 控制器不存在");
+        }
+
         return abort(404);
     }); //->where([ 'controller' => '[0-9a-zA-Z]+', 'action' => '[0-9a-zA-Z]+']);
 // });

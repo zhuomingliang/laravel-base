@@ -19,6 +19,7 @@ class UserController extends Controller {
     public function getIndex() {
         return User::latest()->paginate(20);
     }
+
     /**
      * @return \Illuminate\Http\JsonResponse
      */
