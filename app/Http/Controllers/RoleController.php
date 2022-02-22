@@ -32,9 +32,17 @@ class RoleController extends Controller {
      */
     public function postIndex(CreateOrUpdateRequest $request) {
         try {
+            $menu = $request->get('menu');
+
+            if (is_array($menu)) {
+                $menu = array_filter($menu, function ($value) {
+                    return is_numeric($value);
+                });
+            }
+
             Role::create($request->only([
                 'name', 'guard_name', 'description', 'status'
-            ]))->syncPermissions($request->get('menu'));
+            ]))->syncPermissions($menu);
         } catch (\Exception $e) {
             return $this->conflict('已存在该角色');
         }
@@ -54,9 +62,13 @@ class RoleController extends Controller {
                 'name', 'guard_name', 'description', 'status'
             ]));
 
-            $menu = array_filter($request->get('menu'), function ($value) {
-                return is_numeric($value);
-            });
+            $menu = $request->get('menu');
+
+            if (is_array($menu)) {
+                $menu = array_filter($menu, function ($value) {
+                    return is_numeric($value);
+                });
+            }
 
             $role->syncPermissions($menu);
         } catch (\Exception $e) {
