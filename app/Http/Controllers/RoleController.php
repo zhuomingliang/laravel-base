@@ -33,8 +33,8 @@ class RoleController extends Controller {
     public function postIndex(CreateOrUpdateRequest $request) {
         try {
             Role::create($request->only([
-            'name', 'admin', 'description', 'status'
-        ]));
+                'name', 'admin', 'description', 'status'
+            ]))->syncPermissions($request->get('menu'));
         } catch (\Exception $e) {
             return $this->conflict('已存在该角色');
         }
