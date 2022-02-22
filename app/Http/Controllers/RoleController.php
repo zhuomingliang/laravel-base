@@ -33,7 +33,7 @@ class RoleController extends Controller {
     public function postIndex(CreateOrUpdateRequest $request) {
         try {
             Role::create($request->only([
-                'name', 'admin', 'description', 'status'
+                'name', 'guard_name', 'description', 'status'
             ]))->syncPermissions($request->get('menu'));
         } catch (\Exception $e) {
             return $this->conflict('已存在该角色');
@@ -48,16 +48,17 @@ class RoleController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function putIndex(CreateOrUpdateRequest $request) {
-        // if (Role::where($request->only(['name', 'guard_name']))->where('id', '!=', $id)->count()) {
-        //     throw RoleAlreadyExists::create($request->name, $request->guard_name);
-        // }
-
         $role = Role::findOrFail((int) $request->get('id'));
-
         try {
             $role->update($request->only([
                 'name', 'guard_name', 'description', 'status'
             ]));
+
+            $menu = array_filter($request->get('menu'), function ($value) {
+                return is_numeric($value);
+            });
+
+            $role->syncPermissions($menu);
         } catch (\Exception $e) {
             return $this->conflict('已存在该角色');
         }
