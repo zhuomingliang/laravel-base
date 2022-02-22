@@ -15,11 +15,15 @@ class RoleController extends Controller {
      * @return Collection
      */
     public function getIndex(Request $request) {
-        return Role::query()->where('guard_name', 'admin')->where($request->only(['name']))->paginate();
+        return Role::where('guard_name', 'admin')->where($request->only(['name']))->paginate();
     }
 
-    public function getDetail($id) {
-        return new RoleResource(Role::query()->findOrFail($id));
+    /**
+     * @param Request $request
+     * @return Collection
+     */
+    public function getDetail(Request $request) {
+        return new RoleResource(Role::findOrFail((int) $request->get('id')));
     }
 
     /**
@@ -48,7 +52,7 @@ class RoleController extends Controller {
         //     throw RoleAlreadyExists::create($request->name, $request->guard_name);
         // }
 
-        $role = Role::query()->findOrFail((int) $request->get('id'));
+        $role = Role::findOrFail((int) $request->get('id'));
 
         try {
             $role->update($request->only([
@@ -66,7 +70,7 @@ class RoleController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function putStatus(Request $request) {
-        $role = Role::query()->findOrFail((int) $request->get('id'));
+        $role = Role::findOrFail((int) $request->get('id'));
 
         try {
             $role->update($request->only(['status']));
@@ -92,7 +96,7 @@ class RoleController extends Controller {
      * @return Collection
      */
     public function getPermissions(Request $request) {
-        $role = Role::query()->findOrFail((int) $request->get('id'));
+        $role = Role::findOrFail((int) $request->get('id'));
 
         return $role->permissions;
     }
@@ -105,7 +109,7 @@ class RoleController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function updatePermissions(Request $request) {
-        $role = Role::query()->findOrFail((int) $request->get('id'));
+        $role = Role::findOrFail((int) $request->get('id'));
 
         $role->syncPermissions($request->input('permissions', []));
 
