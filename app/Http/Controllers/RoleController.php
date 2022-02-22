@@ -27,9 +27,13 @@ class RoleController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function postIndex(CreateOrUpdateRequest $request) {
-        Role::create($request->only([
+        try {
+            Role::create($request->only([
             'name', 'admin', 'description'
         ]));
+        } catch (\Exception $e) {
+            return $this->conflict('已存在该角色');
+        }
 
         return $this->created();
     }
@@ -51,7 +55,7 @@ class RoleController extends Controller {
                 'name', 'guard_name', 'description', 'status'
             ]));
         } catch (\Exception $e) {
-            throw RoleAlreadyExists::create($request->name, $request->guard_name);
+            return $this->conflict('已存在该角色');
         }
 
         return $this->noContent();
@@ -67,7 +71,7 @@ class RoleController extends Controller {
         try {
             $role->update($request->only(['status']));
         } catch (\Exception $e) {
-            throw RoleAlreadyExists::create($request->name, $request->guard_name);
+            return $this->conflict('已存在该角色');
         }
 
         return $this->noContent();
