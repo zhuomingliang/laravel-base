@@ -15,7 +15,11 @@ class RoleController extends Controller {
      * @return Collection
      */
     public function getIndex(Request $request) {
-        return Role::where('guard_name', 'admin')->where($request->only(['name']))->paginate();
+        return Role::where('guard_name', 'admin')->where($request->only(['name']))->paginate(
+            (int) $request->get('per_page'),
+            ['*'],
+            'current_page'
+        );
     }
 
     /**

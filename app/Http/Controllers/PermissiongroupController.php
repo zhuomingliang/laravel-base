@@ -16,7 +16,11 @@ class PermissiongroupController extends Controller {
     public function getIndex(Request $request) {
         $permissionGroups = tap(PermissionGroup::latest(), function ($query) use ($request) {
             $query->where($request->only(['name']));
-        })->paginate(20);
+        })->paginate(
+            (int) $request->get('per_page'),
+            ['*'],
+            'current_page'
+        );
 
         return $permissionGroups;
     }

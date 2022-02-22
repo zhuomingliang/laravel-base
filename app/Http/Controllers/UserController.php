@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Resources\Collection;
-
 use App\Models\User;
 use Auth;
 
@@ -16,8 +14,12 @@ class UserController extends Controller {
      *
      * @return void
      */
-    public function getIndex() {
-        return User::latest()->paginate(20);
+    public function getIndex(Request $request) {
+        return User::latest()->paginate(
+            (int) $request->get('per_page'),
+            ['*'],
+            'current_page'
+        );
     }
 
     /**

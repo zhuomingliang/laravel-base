@@ -19,7 +19,11 @@ class PermissionController extends Controller {
             $query->where($request->only([
                 'name', 'guard_name', 'pg_id'
             ]))->select(['id', 'pg_id', 'cname']);
-        })->with('group')->paginate();
+        })->with('group')->paginate(
+            (int) $request->get('per_page'),
+            ['*'],
+            'current_page'
+        );
 
         return $permissions;
     }
