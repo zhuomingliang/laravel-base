@@ -27,7 +27,7 @@ class PermissiongroupController extends Controller {
     public function getAll() {
         $permissionGroups = PermissionGroup::latest()->get();
 
-        return new Collection($permissionGroups);
+        return $permissionGroups;
     }
 
     /**

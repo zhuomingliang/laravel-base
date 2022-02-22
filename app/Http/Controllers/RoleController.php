@@ -15,7 +15,7 @@ class RoleController extends Controller {
      * @return Collection
      */
     public function getIndex(Request $request) {
-        return new Collection(Role::query()->where('guard_name', 'admin')->where($request->only(['name']))->paginate());
+        return Role::query()->where('guard_name', 'admin')->where($request->only(['name']))->paginate();
     }
 
     public function getDetail($id) {
@@ -59,7 +59,6 @@ class RoleController extends Controller {
 
     /**
      * @param CreateOrUpdateRequest $request
-     * @param $id
      * @return \Illuminate\Http\Response
      */
     public function putStatus(Request $request) {
@@ -75,23 +74,23 @@ class RoleController extends Controller {
     }
 
     /**
-     * @param $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function deleteIndex($id) {
-        Role::destroy($id);
+    public function deleteIndex(Request $request) {
+        Role::destroy((int) $request->get('id'));
 
         return $this->noContent();
     }
 
     /**
-     * @param $id
+     * @param Request $request
      * @return Collection
      */
-    public function getPermissions($id) {
-        $role = Role::query()->findOrFail($id);
+    public function getPermissions(Request $request) {
+        $role = Role::query()->findOrFail((int) $request->get('id'));
 
-        return new Collection($role->permissions);
+        return $role->permissions;
     }
 
     /**
@@ -101,8 +100,8 @@ class RoleController extends Controller {
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function updatePermissions($id, Request $request) {
-        $role = Role::query()->findOrFail($id);
+    public function updatePermissions(Request $request) {
+        $role = Role::query()->findOrFail((int) $request->get('id'));
 
         $role->syncPermissions($request->input('permissions', []));
 
