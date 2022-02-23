@@ -27,7 +27,6 @@ class MenuController extends Controller {
             unset($permission['pg_id']);
             unset($permission['pg_name']);
 
-
             if (!isset($data[$pg_id])) {
                 $data[$pg_id]['id'] = "pg_{$pg_id}";
                 $data[$pg_id]['cname'] = $pg_name;
@@ -40,7 +39,8 @@ class MenuController extends Controller {
             if (isset($path[1])) {
                 $tree[$path[0]]['children'][] = $permission;
             } else {
-                $tree[$path[0]]['id'] = $permission['id'];
+                $tree[$path[0]]['children'][] = $permission;
+                $tree[$path[0]]['id'] = "p_{$permission['id']}";
                 $tree[$path[0]]['cname'] = $permission['cname'];
             }
             $data[$pg_id]['children'][$path[0]] = $tree[$path[0]];
@@ -48,7 +48,17 @@ class MenuController extends Controller {
 
         $result = [];
         foreach ($data as $_data) {
-            $_data['children'] = array_values($_data['children']);
+            $data_children = [];
+
+            foreach ($_data['children'] as $children) {
+                usort($children['children'], function ($a, $b) {
+                    return $a['id'] > $b['id'];
+                });
+
+                $data_children[] = $children;
+            }
+
+            $_data['children'] = $data_children;
             $result[] = $_data;
         }
 
