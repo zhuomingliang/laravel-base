@@ -36,13 +36,13 @@ class MenuController extends Controller {
                 $tree[$path[0]] = ['id' => null, 'cname' => null, 'children' => null];
             }
 
-            if (isset($path[1])) {
-                $tree[$path[0]]['children'][] = $permission;
-            } else {
-                $tree[$path[0]]['children'][] = $permission;
+            $tree[$path[0]]['children'][] = $permission;
+
+            if (!isset($path[1])) {
                 $tree[$path[0]]['id'] = "p_{$permission['id']}";
                 $tree[$path[0]]['cname'] = $permission['cname'];
             }
+
             $data[$pg_id]['children'][$path[0]] = $tree[$path[0]];
         }
 
