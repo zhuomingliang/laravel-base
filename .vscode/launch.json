@@ -14,7 +14,7 @@
             "program": "${file}",
             "cwd": "${fileDirname}",
             "stopOnEntry":false,
-            "port": 9000,
+            "port": 9003,
             "runtimeArgs": [
                 "-dxdebug.start_with_request=yes"
             ],
