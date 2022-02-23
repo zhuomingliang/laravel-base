@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -52,5 +50,15 @@ class User extends Authenticatable {
             ->where('user_has_roles.user_id', \Auth::id())->select('permissions.name');
 
         return $permissions;
+    }
+
+    /**
+     * Prepare a date for array / JSON serialization.
+     *
+     * @param  \DateTimeInterface  $date
+     * @return string
+     */
+    protected function serializeDate(\DateTimeInterface $date) {
+        return (string) $date;
     }
 }

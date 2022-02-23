@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Spatie\Permission\Exceptions\RoleAlreadyExists;
-use Spatie\Permission\Models\Role;
 use App\Http\Requests\Role\CreateOrUpdateRequest;
+use App\Models\Role;
 use App\Resources\Collection;
 use App\Resources\Role as RoleResource;
 
