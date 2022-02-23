@@ -114,7 +114,7 @@ class RoleController extends Controller {
     public function getPermissions(Request $request) {
         $role = Role::findOrFail((int) $request->get('id'));
 
-        return $role->permissions;
+        return $role->permissions->pluck('id');
     }
 
     /**
