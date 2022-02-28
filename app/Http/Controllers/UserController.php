@@ -12,7 +12,7 @@ class UserController extends Controller {
     /**
      * 返回用户列表
      *
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getIndex(Request $request) {
         return User::from(\DB::raw('
@@ -27,7 +27,7 @@ class UserController extends Controller {
             ur.user_id = users.id) as r
         '))->latest()->paginate(
             (int) $request->get('per_page'),
-            ['users.username', 'users.email', 'users.created_at', 'r.*'],
+            ['users.id', 'users.username', 'users.email', 'users.created_at', 'r.*'],
             'current_page'
         );
     }
@@ -37,5 +37,18 @@ class UserController extends Controller {
      */
     public function getPermissions() {
         return Auth::user()->getAllPermissions()->pluck('name');
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getExists(Request $request) {
+        $query = User::where('username', (string) $request->get('username'));
+
+        if ($id = (int) $request->get('id')) {
+            $query->where('id', '!=', $id);
+        }
+
+        return $query->first() ? $this->conflict('用户已存在') : $this->noContent();
     }
 }
