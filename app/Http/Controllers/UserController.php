@@ -19,7 +19,7 @@ class UserController extends Controller {
         users,
         LATERAL (SELECT
             string_agg(r.id::text, \',\') as role_id,
-            string_agg(r.name, \'、\') as role
+            string_agg(r.name, \',\') as role
         FROM
             roles r
         LEFT JOIN user_has_roles ur ON r.id = ur.role_id
