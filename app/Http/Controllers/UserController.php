@@ -18,7 +18,6 @@ class UserController extends Controller {
         return User::from(\DB::raw('
         users,
         LATERAL (SELECT
-            string_agg(r.id::text, \',\') as role_id,
             string_agg(r.name, \'、\') as role
         FROM
             roles r

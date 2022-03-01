@@ -25,6 +25,14 @@ class RoleController extends Controller {
      * @param Request $request
      * @return Collection
      */
+    public function getRoles() {
+        return Role::all(['id', 'name']);
+    }
+
+    /**
+     * @param Request $request
+     * @return Collection
+     */
     public function getDetail(Request $request) {
         return new RoleResource(Role::findOrFail((int) $request->get('id')));
     }
