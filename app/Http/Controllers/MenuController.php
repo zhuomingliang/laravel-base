@@ -52,7 +52,7 @@ class MenuController extends Controller {
 
             foreach ($_data['children'] as $children) {
                 usort($children['children'], function ($a, $b) {
-                    return $a['id'] > $b['id'] ? 1 : -1;
+                    return $a['id'] - $b['id'];
                 });
 
                 $data_children[] = $children;
