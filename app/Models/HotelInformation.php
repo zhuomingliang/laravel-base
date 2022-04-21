@@ -17,6 +17,7 @@ class HotelInformation extends Model {
      * @return string
      */
     protected function serializeDate(\DateTimeInterface $date) {
+        //逻辑
         return (string) $date;
     }
 }
