@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('file_name')->comment('文件名');
             $table->string('file_path')->comment('访问路径');
             $table->boolean('status')->default(true)->comment('状态');
+            $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
         });

@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('name')->comment('姓名');
             $table->string('phone')->comment('电话号码');
             $table->boolean('status')->default(true)->comment('状态');
+            $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
         });
