@@ -185,6 +185,13 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改行程', 'name' => 'TravelArrangements/PutIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除行程', 'name' => 'TravelArrangements/DeleteIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'TravelArrangements/PutStatus']);
+
+        // 演讲活动
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '演讲活动', 'name' => 'SpeechActivities/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增演讲', 'name' => 'SpeechActivities/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改演讲', 'name' => 'SpeechActivities/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除演讲', 'name' => 'SpeechActivities/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'SpeechActivities/PutStatus']);
     }
 
     /**
