@@ -192,6 +192,33 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改演讲', 'name' => 'SpeechActivities/PutIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除演讲', 'name' => 'SpeechActivities/DeleteIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'SpeechActivities/PutStatus']);
+
+        // 本地信息
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '本地信息', 'name' => 'LocalInformation/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增信息', 'name' => 'LocalInformation/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改信息', 'name' => 'LocalInformation/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除信息', 'name' => 'LocalInformation/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'LocalInformation/PutStatus']);
+
+        // 展会信息
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '展会信息', 'name' => 'HomeDecorationExpo/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增展会', 'name' => 'HomeDecorationExpo/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改展会', 'name' => 'HomeDecorationExpo/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除展会', 'name' => 'HomeDecorationExpo/DeleteIndex']);
+
+        // 宣传片
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '宣传片列表', 'name' => 'AdvertisingVideo/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增宣传片', 'name' => 'AdvertisingVideo/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改宣传片', 'name' => 'AdvertisingVideo/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除宣传片', 'name' => 'AdvertisingVideo/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态',   'name' => 'HomeDecorationExpo/PutStatus']);
+
+        // 文件信息
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '文件列表', 'name' => 'FileInformation/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增文件', 'name' => 'FileInformation/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改文件', 'name' => 'FileInformation/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除文件', 'name' => 'FileInformation/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'FileInformation/PutStatus']);
     }
 
     /**
