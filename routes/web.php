@@ -17,8 +17,34 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Auth::routes();
 
-require __DIR__.'/auth.php';
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+// 万能路由
+// Route::group(['middleware'=>['web']], function () {
+    Route::middleware('auth:sanctum,admin,web')->any('/{controller}/{action?}', function ($controller, $action = 'index') {
+        $controller = 'App\\Http\\Controllers\\' . ucfirst(strtolower($controller)) . 'Controller';
+
+        if (class_exists($controller)) {
+            $controller = \App::make($controller);
+
+            $action = strtolower(request()->getMethod()) . ucfirst(strtolower($action));
+
+            try {
+                return \App::call([$controller, $action]);
+            } catch (\ReflectionException $e) {
+                if (env('APP_DEBUG') === true) {
+                    throw $e;
+                }
+            }
+        }
+
+        if (env('APP_DEBUG') === true) {
+            throw new \RuntimeException("{$controller} 控制器不存在");
+        }
+
+        return abort(404);
+    }); //->where([ 'controller' => '[0-9a-zA-Z]+', 'action' => '[0-9a-zA-Z]+']);
+// });
