@@ -235,6 +235,15 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除联系人', 'name' => 'VehicleSafeguard/DeleteIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态',   'name' => 'VehicleSafeguard/PutStatus']);
 
+        // 医疗保障
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '医疗保障列表', 'name' => 'MedicalSecurity/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增联系人',   'name' => 'MedicalSecurity/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '数据导入',     'name' => 'MedicalSecurity/PostImport']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改联系人',   'name' => 'MedicalSecurity/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除联系人',   'name' => 'MedicalSecurity/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态',     'name' => 'MedicalSecurity/PutStatus']);
+
+
         // 交通信息
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '交通信息列表', 'name' => 'TravelArrangements/getIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增交通信息', 'name' => 'TravelArrangements/PostIndex']);
