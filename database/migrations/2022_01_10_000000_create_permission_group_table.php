@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Models\PermissionGroup;
 
 class CreatePermissionGroupTable extends Migration {
     /**
@@ -16,6 +17,14 @@ class CreatePermissionGroupTable extends Migration {
             $table->string('name')->unique()->comment('名称');
             $table->timestamps();
         });
+
+        $this->insertPermissionGroups();
+    }
+
+    public function insertPermissionGroups() {
+        PermissionGroup::create(['pg_id' => 1, 'name' => '系统管理']);
+        PermissionGroup::create(['pg_id' => 2, 'name' => '数据管理']);
+        PermissionGroup::create(['pg_id' => 3, 'name' => '信息管理']);
     }
 
     /**

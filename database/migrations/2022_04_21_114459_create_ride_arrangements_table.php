@@ -11,7 +11,7 @@ return new class extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('ride_arrangement', function (Blueprint $table) {
+        Schema::create('ride_arrangements', function (Blueprint $table) {
             $table->id();
             $table->integer('home_decoration_expo_id')->comment('家博会 ID');
             $table->string('auto_no')->comment('车次');
@@ -37,6 +37,6 @@ return new class extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('ride_arrangement');
+        Schema::dropIfExists('ride_arrangements');
     }
 };
