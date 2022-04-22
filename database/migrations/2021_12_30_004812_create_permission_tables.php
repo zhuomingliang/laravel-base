@@ -219,6 +219,21 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改文件', 'name' => 'FileInformation/PutIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除文件', 'name' => 'FileInformation/DeleteIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'FileInformation/PutStatus']);
+
+        // 酒店信息
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '酒店列表', 'name' => 'HotelInformation/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增酒店', 'name' => 'HotelInformation/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改酒店', 'name' => 'HotelInformation/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除酒店', 'name' => 'HotelInformation/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'HotelInformation/PutStatus']);
+
+        // 车辆保障
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '联系人列表', 'name' => 'VehicleSafeguard/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增联系人', 'name' => 'VehicleSafeguard/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '数据导入',   'name' => 'VehicleSafeguard/PostImport']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改联系人', 'name' => 'VehicleSafeguard/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除联系人', 'name' => 'VehicleSafeguard/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态',   'name' => 'VehicleSafeguard/PutStatus']);
     }
 
     /**
