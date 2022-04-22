@@ -6,19 +6,19 @@ use Illuminate\Http\Request;
 
 class GuestInformationController extends Controller
 {
-    //获取信息
+    //获取
     public function getIndex()
     {
 
     }
 
-    //新增信息
+    //新增
     public function PostIndex()
     {
 
     }
 
-    //导入信息
+    //导入
     public function PostImport()
     {
 
@@ -30,8 +30,9 @@ class GuestInformationController extends Controller
 
     }
 
+    //删除
     public function DeleteIndex()
     {
-        
+
     }
 }
