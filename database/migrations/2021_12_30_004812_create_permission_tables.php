@@ -163,12 +163,28 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除用餐', 'name' => 'DiningArrangements/DeleteIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'DiningArrangements/PutStatus']);
 
+        // 住宿安排
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '住宿安排', 'name' => 'AccommodationArrangements/getIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增住宿', 'name' => 'AccommodationArrangements/PostIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '数据导入', 'name' => 'AccommodationArrangements/PostImport']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改住宿', 'name' => 'AccommodationArrangements/PutIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除嘉宾', 'name' => 'AccommodationArrangements/DeleteIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'AccommodationArrangements/PutStatus']);
+
+        // 乘车安排
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '乘车安排', 'name' => 'RideArrangements/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增车次', 'name' => 'RideArrangements/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '数据导入', 'name' => 'RideArrangements/PostImport']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改车次', 'name' => 'RideArrangements/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除车次', 'name' => 'RideArrangements/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'RideArrangements/PutStatus']);
+
+        // 行程安排
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '行程安排', 'name' => 'TravelArrangements/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增行程', 'name' => 'TravelArrangements/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改行程', 'name' => 'TravelArrangements/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除行程', 'name' => 'TravelArrangements/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'TravelArrangements/PutStatus']);
     }
 
     /**
