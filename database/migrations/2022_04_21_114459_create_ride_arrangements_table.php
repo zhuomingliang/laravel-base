@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('ride_arrangements', function (Blueprint $table) {
             $table->id();
             $table->integer('home_decoration_expo_id')->comment('家博会 ID');
-            $table->string('auto_no')->comment('车次');
+            $table->string('auto_no')->unique()->comment('车次');
             $table->string('license_plate_number')->nullable()->comment('车牌号');
             $table->string('driver')->nullable()->comment('司机');
             $table->string('driver_phone')->nullable()->comment('司机电话号码');
