@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
 class CreatePermissionTables extends Migration {
@@ -128,6 +129,21 @@ class CreatePermissionTables extends Migration {
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
+
+        $this->insertMenu();
+    }
+
+    private function insertMenu() {
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // create permissions
+        Permission::create(['guard_name' => 'admin', 'cname' => '用户管理', 'name' => 'user/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '创建用户', 'name' => 'user/postIndex']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '修改用户', 'name' => 'user/putIndex']);
+
+        Permission::create(['guard_name' => 'admin', 'cname' => '角色管理', 'name' => 'role/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '权限管理', 'name' => 'permission/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'cname' => '系统日志', 'name' => 'SystemLog/getIndex']);
     }
 
     /**
