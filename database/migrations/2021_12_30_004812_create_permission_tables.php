@@ -234,6 +234,19 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改联系人', 'name' => 'VehicleSafeguard/PutIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除联系人', 'name' => 'VehicleSafeguard/DeleteIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态',   'name' => 'VehicleSafeguard/PutStatus']);
+
+        // 交通信息
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '交通信息列表', 'name' => 'TravelArrangements/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增交通信息', 'name' => 'TravelArrangements/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '数据导入',   'name' => 'TravelArrangements/PostImport']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改交通信息', 'name' => 'TravelArrangements/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除交通信息', 'name' => 'TravelArrangements/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态',   'name' => 'TravelArrangements/PutStatus']);
+
+        // 防疫须知
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '防疫须知列表', 'name' => 'EpidemicPreventionInstructions/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增防疫须知', 'name' => 'EpidemicPreventionInstructions/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改防疫须知', 'name' => 'EpidemicPreventionInstructions/PutIndex']);
     }
 
     /**
