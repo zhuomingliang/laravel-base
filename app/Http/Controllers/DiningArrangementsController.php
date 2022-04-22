@@ -35,4 +35,10 @@ class DiningArrangementsController extends Controller
     {
 
     }
+
+    //修改状态
+    public function PutStatus()
+    {
+
+    }
 }
