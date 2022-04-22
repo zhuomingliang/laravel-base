@@ -13,6 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('travel_arrangements', function (Blueprint $table) {
             $table->id();
+            $table->integer('home_decoration_expo_id')->comment('家博会 ID');
             $table->date('date')->comment('日期');
             $table->jsonb('scheduling')->comment('行程安排');
             $table->boolean('status')->default(true)->comment('状态');

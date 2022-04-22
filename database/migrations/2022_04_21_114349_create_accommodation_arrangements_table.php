@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('accommodation_arrangements', function (Blueprint $table) {
             $table->id();
             $table->integer('home_decoration_expo_id')->comment('家博会 ID');
-            $table->string('hotel')->comment('酒店名');
+            $table->string('hotel')->unique()->comment('酒店名');
             $table->jsonb('storey_info')->default('{}')->comment('楼层信息');
             $table->string('contacts')->nullable()->comment('联系人');
             $table->string('contact_telephone')->nullable()->comment('午餐桌次安排图');

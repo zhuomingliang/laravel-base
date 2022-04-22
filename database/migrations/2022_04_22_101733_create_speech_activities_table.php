@@ -13,6 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('speech_activities', function (Blueprint $table) {
             $table->id();
+            $table->integer('home_decoration_expo_id')->comment('家博会 ID');
             $table->text('title')->comment('主题');
             $table->date('date')->comment('日期');
             $table->time('time')->comment('时间');
