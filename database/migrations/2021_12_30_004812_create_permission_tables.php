@@ -137,23 +137,26 @@ class CreatePermissionTables extends Migration {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '用户管理', 'name' => 'user/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '用户管理', 'name' => 'user']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '创建用户', 'name' => 'user/postIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '修改用户', 'name' => 'user/putIndex']);
 
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '角色管理', 'name' => 'role/getIndex']);
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '权限管理', 'name' => 'permission/getIndex']);
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '系统日志', 'name' => 'SystemLog/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '角色管理', 'name' => 'role']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '权限管理', 'name' => 'permission']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '系统日志', 'name' => 'SystemLog']);
 
         // 嘉宾信息
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '嘉宾信息', 'name' => 'GuestInformation/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '嘉宾信息', 'name' => 'GuestInformation']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '新增嘉宾', 'name' => 'GuestInformation/PostIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '数据导入', 'name' => 'GuestInformation/PostImport']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '修改嘉宾', 'name' => 'GuestInformation/PutIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '删除嘉宾', 'name' => 'GuestInformation/DeleteIndex']);
 
         // 首页信息菜单，不需要控制器和方法代码，用来给前端判断是否有这个权限
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '首页信息', 'name' => 'IndexInformation/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '首页信息', 'name' => 'IndexInformation']);
+
+        // 服务指南菜单，不需要控制器和方法代码，用来给前端判断是否有这个权限
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '首页信息', 'name' => 'ServiceInformation/getIndex']);
 
         // 用餐安排
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '用餐安排', 'name' => 'DiningArrangements/getIndex']);

@@ -3,41 +3,71 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\RideArrangements;
 
 class RideArrangementsController extends Controller {
     //获取
-    public function getIndex()
-    {
-
+    public function getIndex(Request $request) {
+        return RideArrangements::where($request->only(['date', 'status']))->latest()->paginate(
+            (int) $request->get('per_page'),
+            ['*'],
+            'current_page'
+        );
     }
 
     //新增
-    public function PostIndex()
-    {
+    public function PostIndex(Request $request) {
+        try {
+            RideArrangements::insert($request->only([
+                'home_decoration_expo_id', 'auto_no', 'license_plate_number', 'driver',
+                'driver_phone', 'commentator', 'commentator_phone', 'attendants', 'attendants_phone', 'status'
+            ]));
+        } catch (\Exception $e) {
+            return $this->conflict('已存在该数据');
+        }
 
+        return $this->created();
     }
 
     //导入
-    public function PostImport()
-    {
-
+    public function PostImport() {
     }
 
     //修改
-    public function PutIndex()
-    {
+    public function PutIndex(Request $request) {
+        try {
+            RideArrangements::where('id', (int)$request->get('id', 0))->update($request->only([
+                'home_decoration_expo_id', 'auto_no', 'license_plate_number', 'driver',
+                'driver_phone', 'commentator', 'commentator_phone', 'attendants', 'attendants_phone', 'status'
+            ]));
+        } catch (\Exception $e) {
+            return $this->conflict('已存在该数据');
+        }
 
+        return $this->noContent();
     }
 
     //删除
-    public function DeleteIndex()
-    {
+    public function DeleteIndex(Request $request) {
+        try {
+            if (RideArrangements::where('id', (int)$request->get('id', 0))->delete()) {
+                return $this->noContent();
+            };
+        } catch (\Exception $e) {
+        }
 
+        return $this->unprocessableEntity();
     }
 
     //修改状态
-    public function PutStatus()
-    {
+    public function PutStatus(Request $request) {
+        $rideArrangements = RideArrangements::findOrFail((int) $request->get('id'));
 
+        try {
+            $rideArrangements->update($request->only(['status']));
+        } catch (\Exception $e) {
+        }
+
+        return $this->noContent();
     }
 }

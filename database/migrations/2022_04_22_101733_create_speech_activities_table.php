@@ -13,6 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('speech_activities', function (Blueprint $table) {
             $table->id();
+            $table->integer('home_decoration_expo_id')->comment('家博会 ID');
             $table->text('title')->comment('主题');
             $table->date('date')->comment('日期');
             $table->time('time')->comment('时间');
@@ -24,6 +25,8 @@ return new class extends Migration {
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
         });
+
+        DB::statement("COMMENT ON TABLE speech_activities IS '演讲活动'");
     }
 
     /**

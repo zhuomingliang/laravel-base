@@ -45,6 +45,10 @@ class User extends Authenticatable {
      * Return all the permissions the model has, both directly and via roles.
      */
     public function getAllPermissions() {
+        if (\Auth::id() === 1) {
+            return Permission::select('name');
+        }
+
         $permissions = Permission::join('role_has_permissions', 'permissions.id', 'role_has_permissions.permission_id')
             ->join('user_has_roles', 'user_has_roles.role_id', 'role_has_permissions.role_id')
             ->where('user_has_roles.user_id', \Auth::id())->select('permissions.name');

@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('home_decoration_expo', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->comment('家博会主题');
+            $table->string('title')->unique()->comment('家博会主题');
             $table->text('description')->comment('家博会简介内容');
             $table->string('daterange')->comment('时间范围');
             $table->boolean('status')->default(true)->comment('状态');
