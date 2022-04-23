@@ -13,6 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('guest_information', function (Blueprint $table) {
             $table->id();
+            $table->integer('home_decoration_expo_id')->comment('家博会 ID');
             $table->string('full_name')->comment('姓名');
             $table->string('phone')->comment('手机号');
             $table->string('from')->comment('添加渠道');
