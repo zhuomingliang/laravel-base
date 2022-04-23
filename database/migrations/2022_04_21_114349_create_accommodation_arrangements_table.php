@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('hotel')->unique()->comment('酒店名');
             $table->jsonb('storey_info')->default('{}')->comment('楼层信息');
             $table->string('contacts')->nullable()->comment('联系人');
-            $table->string('contact_telephone')->nullable()->comment('午餐桌次安排图');
+            $table->string('contact_telephone')->nullable()->comment('联系人电话');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
