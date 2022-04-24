@@ -28,9 +28,8 @@ class SpeechActivitiesController extends Controller
                 'host', 'guest', 'status'
             ]));
         } catch (\Exception $e) {
-            return $this->conflict('已存在该演讲');
+            return $this->conflict($e->getMessage());
         }
-
         return $this->created();
 
     }
@@ -56,9 +55,10 @@ class SpeechActivitiesController extends Controller
         try {
             if (Model::where('id', (int)$request->get('id', 0))->delete()) {
                 return $this->noContent();
-            };
+            }
         } catch (\Exception $e) {
         }
+
 
         return $this->unprocessableEntity();
     }
