@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Models\CheckIn;
+use App\Models\GuestInformation;
+use App\Models\HomeDecorationExpo;
 use App\Models\DiningArrangements;
 use App\Models\TravelArrangements;
 use App\Models\SpeechActivities;
@@ -33,16 +36,68 @@ class IndexController extends Controller{
         $data = $request->all();
         $user = $data['user'];
         $phone = $data['phone'];
+        $expo_id = $data['expo_id'];
         if(empty($user))return response()->e_back('502','请输入姓名');
         if(empty($phone) && strlen($phone) != 11)return response()->e_back('502','请输入正确的手机号码');
-
-
+        $ginnfo = GuestInformation::where(['guest_information.full_name'=>$user,'guest_information.phone'=>$phone,'guest_information.home_decoration_expo_id'=>$expo_id])
+            ->leftJoin('home_decoration_expo','guest_information.home_decoration_expo_id = home_decoration_expo.home_decoration_expo_id')
+            ->first();
+        //是否签到
+        if(!empty($ginnfo)){
+            //新增签到记录
+            $param = ['guest_information_id'=>$ginnfo->id];
+            CheckIn::insert($param);
+        }else{
+            $gparam = [
+                'home_decoration_expo_id'=>$expo_id,
+                'full_name'=>$user,
+                'phone'=>$phone,
+                'from'=>'APP',
+            ];
+            $gId = GuestInformation::insertGetId($gparam,'id');
+            //新增签到记录
+            $param = ['guest_information_id'=>$gId];
+            CheckIn::insert($param);
+        }
+        return response()->s_back(100, '成功');
     }
 
+    //嘉宾是否签到
+    public function IsSign(Request $request)
+    {
+        //ALTER TABLE guest_information ADD COLUMN qc_path VARCHAR ( 150 );
+        $data = $request->all();
+        $user = $data['user'];
+        $phone = $data['phone'];
+        $expo_id = $data['expo_id'];
+        if(empty($user))return response()->e_back('502','请输入姓名');
+        if(empty($phone) && strlen($phone) != 11)return response()->e_back('502','请输入正确的手机号码');
+        $ginnfo = GuestInformation::where(['guest_information.full_name'=>$user,'guest_information.phone'=>$phone,'guest_information.home_decoration_expo_id'=>$expo_id])
+            ->leftJoin('home_decoration_expo','guest_information.home_decoration_expo_id = home_decoration_expo.home_decoration_expo_id')
+            ->first();
+        //是否签到
+        if(!empty($ginnfo)){
+            //新增签到记录
+            $param = ['guest_information_id'=>$ginnfo->id];
+            CheckIn::insert($param);
+        }else{
+            $gparam = [
+                'home_decoration_expo_id'=>$expo_id,
+                'full_name'=>$user,
+                'phone'=>$phone,
+                'from'=>'APP',
+            ];
+            $gId = GuestInformation::insertGetId($gparam,'id');
+            //新增签到记录
+            $param = ['guest_information_id'=>$gId];
+            CheckIn::insert($param);
+        }
+        return response()->s_back(100, '成功');
+    }
     //最新家博会信息
     public function expo(){
         //INSERT INTO home_decoration_expo (title,description,daterange) VALUES ('第八届家博会','家博会简介内容',$$['2023-04-01 07:00:00', '2023-06-01 08:00:00']$$);
-        $data = DB::table('home_decoration_expo')->orderBy('id','desc')->first();
+        $data = HomeDecorationExpo::orderBy('id','desc')->first();
 
         $reData = [];
         $reData['id'] = $data->id;
