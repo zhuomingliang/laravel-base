@@ -50,5 +50,6 @@ Route::post('/sanctum/token', function (Request $request) {
 Route::group(['namespace'=>'App\Http\Controllers\Api'],function (){
     Route::any('index', 'IndexController@index');
     Route::any('expo', 'IndexController@expo');//最新家博会信息
+    Route::any('diningArrangements', 'IndexController@diningArrangements');//用餐安排列表
 
 });

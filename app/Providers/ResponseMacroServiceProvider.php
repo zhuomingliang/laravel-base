@@ -42,11 +42,11 @@ class ResponseMacroServiceProvider extends ServiceProvider
                     json_encode(request()->all(), JSON_UNESCAPED_UNICODE),
                     json_encode($response_data, JSON_UNESCAPED_UNICODE)
                 ));
-            $response_data = mb_convert_encoding( $response_data, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
+            //$response_data = mb_convert_encoding( $response_data, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
 
                 return Response::json($response_data)->setEncodingOptions(320);
         });
-
+	
         //成功返回
         Response::macro('s_back', function ($code = 100,  $msg = '成功',$data = null){
             if(empty($data))
@@ -64,7 +64,7 @@ class ResponseMacroServiceProvider extends ServiceProvider
                 json_encode(request()->all(), JSON_UNESCAPED_UNICODE),
                 json_encode($response_data, JSON_UNESCAPED_UNICODE)
             ));
-            $response_data = mb_convert_encoding( $response_data, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
+            //$response_data = mb_convert_encoding( $response_data, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
             return Response::json($response_data)->setEncodingOptions(320);
         });
 
