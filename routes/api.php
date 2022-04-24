@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -43,4 +42,13 @@ Route::post('/sanctum/token', function (Request $request) {
     }
 
     return $user->createToken($request->device_name)->plainTextToken;
+});
+
+
+
+
+Route::group(['namespace'=>'App\Http\Controllers\Api'],function (){
+    Route::any('index', 'IndexController@index');
+    Route::any('expo', 'IndexController@expo');//最新家博会信息
+
 });
