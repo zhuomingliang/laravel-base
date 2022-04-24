@@ -156,7 +156,7 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '首页信息', 'name' => 'IndexInformation']);
 
         // 服务指南菜单，不需要控制器和方法代码，用来给前端判断是否有这个权限
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '首页信息', 'name' => 'ServiceInformation/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '服务指南', 'name' => 'ServiceInformation/getIndex']);
 
         // 用餐安排
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '用餐安排', 'name' => 'DiningArrangements/getIndex']);
