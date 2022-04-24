@@ -18,10 +18,13 @@ class AccommodationArrangementsController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            AccommodationArrangements::insert($request->only([
+            $data = $request->only([
                 'home_decoration_expo_id', 'hotel', 'storey_info', 'contacts',
                 'contact_telephone', 'status'
-            ]));
+            ]);
+            $data['home_decoration_expo_id'] = 1;
+
+            AccommodationArrangements::insert($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该地点');
         }

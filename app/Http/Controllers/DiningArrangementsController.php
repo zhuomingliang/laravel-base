@@ -18,11 +18,19 @@ class DiningArrangementsController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            DiningArrangements::insert($request->only([
+            $data = $request->only([
                 'home_decoration_expo_id', 'date', 'breakfast_place', 'breakfast_picture',
                 'lunch_place', 'lunch_picture', 'dinner_place', 'dinner_picture', 'status'
-            ]));
+            ]);
+
+            $data['home_decoration_expo_id'] = 1;
+            $data['breakfast_picture'] = $data['breakfast_picture'][0];
+            $data['lunch_picture'] = $data['lunch_picture'][0];
+            $data['dinner_picture'] = $data['dinner_picture'][0];
+
+            DiningArrangements::insert($data);
         } catch (\Exception $e) {
+            return $this->conflict($e->getMessage());
             return $this->conflict('已存在该地点');
         }
 
