@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AdvertisingVideo extends Model {
     use HasFactory;
     use SoftDeletes;
+    protected $table = 'advertising_video';
 
     /**
      * Prepare a date for array / JSON serialization.

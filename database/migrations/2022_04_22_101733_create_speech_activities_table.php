@@ -16,7 +16,8 @@ return new class extends Migration {
             $table->integer('home_decoration_expo_id')->comment('家博会 ID');
             $table->text('title')->comment('主题');
             $table->date('date')->comment('日期');
-            $table->time('time')->comment('时间');
+            $table->time('time_start')->comment('开始时间');
+            $table->time('time_end')->comment('结束时间');
             $table->text('place')->comment('地点');
             $table->text('host')->comment('主持人');
             $table->text('guest')->comment('嘉宾');
