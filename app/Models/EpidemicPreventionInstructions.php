@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EpidemicPreventionInstructions extends Model {
     use HasFactory;
-    use SoftDeletes;
+//    use SoftDeletes;
 
     /**
      * Prepare a date for array / JSON serialization.

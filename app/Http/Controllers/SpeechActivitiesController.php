@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\SpeechActivities as Model;
 use Illuminate\Http\Request;
 
+/*
+ * 演讲活动
+ * */
+
 class SpeechActivitiesController extends Controller
 {
     //获取
