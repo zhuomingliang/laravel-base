@@ -18,22 +18,8 @@ use App\Models\LocalInformation;
 use Illuminate\Support\Facades\Log;
 class IndexController extends Controller{
 
-    public function index2(){
-        $data = DB::table('home_decoration_expo')->get();
-
-        if(empty($data)) return response()->e_back(500, '查询失败');
-        $reData = [];
-        foreach($data as $k => $v )
-        {
-            $reData[$k]['id'] = $v->id;
-            $reData[$k]['username'] = $v->username;
-            $reData[$k]['email'] = $v->email;
-            $reData[$k]['email_verified_at'] = $v->email_verified_at;
-            $reData[$k]['remember_token'] = $v->remember_token;
-            $reData[$k]['created_at'] = $v->created_at;
-            $reData[$k]['updated_at'] = $v->updated_at;
-        }
-        return response()->s_back(100, '查询成功',$reData);
+    public function index(){
+       return true;
     }
 
     //嘉宾签到
@@ -73,7 +59,7 @@ class IndexController extends Controller{
                 CheckIn::insert($param);
             }
             DB::commit();
-            return $this->created();
+            return ['msg'=>'成功','data'=>''];
         }catch(\Exception $e){
             log::info('嘉宾签到:'.$e->getMessage());
             DB::rollBack();
@@ -194,9 +180,9 @@ class IndexController extends Controller{
     //宣传片
     public function advertisingVideo(Request $request)
     {
-        $currpage = (int)$request->post('currpage',1);
-        $limit = (int)$request->post('limit', 10);
-        $id = $request->post('id');
+        $currpage = (int)$request->get('currpage',1);
+        $limit = (int)$request->get('limit', 10);
+        $id = $request->get('id');
         $where = [];
         if(!empty($id))
         {
@@ -205,7 +191,7 @@ class IndexController extends Controller{
 
         $count = AdvertisingVideo::where($where)->count();
         $taList = AdvertisingVideo::select(['id','title',
-            'video','status','created_at'
+            'video','sort','status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get();
 
         //INSERT INTO advertising_video (title,video) VALUES('视频1','视频文件');
@@ -221,9 +207,9 @@ class IndexController extends Controller{
     //酒店列表
     public function hotelInformation(Request $request)
     {
-        $currpage = (int)$request->post('currpage',1);
-        $limit = (int)$request->post('limit', 10);
-        $id = $request->post('id');
+        $currpage = (int)$request->get('currpage',1);
+        $limit = (int)$request->get('limit', 10);
+        $id = $request->get('id');
         $where = [];
         if(!empty($id))
         {
@@ -246,9 +232,9 @@ class IndexController extends Controller{
     //交通信息列表
     public function trafficInformation(Request $request)
     {
-        $currpage = (int)$request->post('currpage',1);
-        $limit = (int)$request->post('limit', 10);
-        $id = $request->post('id');
+        $currpage = (int)$request->get('currpage',1);
+        $limit = (int)$request->get('limit', 10);
+        $id = $request->get('id');
         $where = [];
         if(!empty($id))
         {
@@ -291,9 +277,9 @@ class IndexController extends Controller{
     //本地信息(简介)
     public function localInformation(Request $request)
     {
-        $currpage = (int)$request->post('currpage',1);
-        $limit = (int)$request->post('limit', 10);
-        $id = $request->post('id');
+        $currpage = (int)$request->get('currpage',1);
+        $limit = (int)$request->get('limit', 10);
+        $id = $request->get('id');
         $where = [];
         if(!empty($id))
         {
