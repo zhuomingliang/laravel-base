@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CheckIn extends Model {
     use HasFactory;
-
+    protected $table = 'check_in';
     /**
      * Prepare a date for array / JSON serialization.
      *

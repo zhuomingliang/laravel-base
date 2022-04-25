@@ -10,6 +10,12 @@ use App\Models\HomeDecorationExpo;
 use App\Models\DiningArrangements;
 use App\Models\TravelArrangements;
 use App\Models\SpeechActivities;
+use App\Models\AdvertisingVideo;
+use App\Models\HotelInformation;
+use App\Models\TrafficInformation;
+use App\Models\EpidemicPreventionInstructions;
+use App\Models\LocalInformation;
+use Illuminate\Support\Facades\Log;
 class IndexController extends Controller{
 
     public function index2(){
@@ -36,78 +42,74 @@ class IndexController extends Controller{
         $data = $request->all();
         $user = $data['user'];
         $phone = $data['phone'];
-        $expo_id = $data['expo_id'];
+        $expo_id = (int)$data['expo_id'];
+        $uniq_no = $data['uniq_no'];
         if(empty($user))return response()->e_back('502','请输入姓名');
         if(empty($phone) && strlen($phone) != 11)return response()->e_back('502','请输入正确的手机号码');
+        if(empty($uniq_no))return response()->e_back('502','缺少参数uniq_no');
         $ginnfo = GuestInformation::where(['guest_information.full_name'=>$user,'guest_information.phone'=>$phone,'guest_information.home_decoration_expo_id'=>$expo_id])
-            ->leftJoin('home_decoration_expo','guest_information.home_decoration_expo_id = home_decoration_expo.home_decoration_expo_id')
+            ->leftJoin('check_in','guest_information.id','=','check_in.guest_information_id')
             ->first();
-        //是否签到
-        if(!empty($ginnfo)){
-            //新增签到记录
-            $param = ['guest_information_id'=>$ginnfo->id];
-            CheckIn::insert($param);
-        }else{
-            $gparam = [
-                'home_decoration_expo_id'=>$expo_id,
-                'full_name'=>$user,
-                'phone'=>$phone,
-                'from'=>'APP',
-            ];
-            $gId = GuestInformation::insertGetId($gparam,'id');
-            //新增签到记录
-            $param = ['guest_information_id'=>$gId];
-            CheckIn::insert($param);
+        DB::beginTransaction();
+        try {
+            //是否签到
+            if (!empty($ginnfo)) {
+                //新增签到记录
+                $param = ['guest_information_id' => $ginnfo->id];
+                CheckIn::insert($param);
+                //更新小程序唯一标识
+                GuestInformation::where(['full_name' => $user, 'phone' => $phone, 'home_decoration_expo_id' => $expo_id])->update(['uniq_no' => $uniq_no]);
+            } else {
+                $gparam = [
+                    'home_decoration_expo_id' => $expo_id,
+                    'full_name' => $user,
+                    'phone' => $phone,
+                    'from' => 'APP',
+                    'uniq_no' => $uniq_no,
+                ];
+                $gId = GuestInformation::insertGetId($gparam, 'id');
+                //新增签到记录
+                $param = ['guest_information_id' => $gId];
+                CheckIn::insert($param);
+            }
+            DB::commit();
+            return $this->created();
+        }catch(\Exception $e){
+            log::info('嘉宾签到:'.$e->getMessage());
+            DB::rollBack();
         }
-        return response()->s_back(100, '成功');
+        return $this->conflict('嘉宾签到失败');
     }
 
     //嘉宾是否签到
-    public function IsSign(Request $request)
+    public function isSign(Request $request)
     {
-        //ALTER TABLE guest_information ADD COLUMN qc_path VARCHAR ( 150 );
         $data = $request->all();
-        $user = $data['user'];
-        $phone = $data['phone'];
         $expo_id = $data['expo_id'];
-        if(empty($user))return response()->e_back('502','请输入姓名');
-        if(empty($phone) && strlen($phone) != 11)return response()->e_back('502','请输入正确的手机号码');
-        $ginnfo = GuestInformation::where(['guest_information.full_name'=>$user,'guest_information.phone'=>$phone,'guest_information.home_decoration_expo_id'=>$expo_id])
-            ->leftJoin('home_decoration_expo','guest_information.home_decoration_expo_id = home_decoration_expo.home_decoration_expo_id')
+        $uniq_no = $data['uniq_no'];
+        if(empty($expo_id))return $this->conflict('缺少必要参数expo_id');
+        if(empty($uniq_no))return $this->conflict('缺少必要参数uniq_no');
+
+        $ginnfo = GuestInformation::where(['guest_information.home_decoration_expo_id'=>$expo_id,'guest_information.uniq_no'=>$uniq_no])
+            ->leftJoin('check_in','guest_information.id','=','check_in.guest_information_id')
             ->first();
         //是否签到
         if(!empty($ginnfo)){
-            //新增签到记录
-            $param = ['guest_information_id'=>$ginnfo->id];
-            CheckIn::insert($param);
+            $info['is_sign'] = 1;
+            $info['msg'] = '已签到';
+            return $info;
         }else{
-            $gparam = [
-                'home_decoration_expo_id'=>$expo_id,
-                'full_name'=>$user,
-                'phone'=>$phone,
-                'from'=>'APP',
-            ];
-            $gId = GuestInformation::insertGetId($gparam,'id');
-            //新增签到记录
-            $param = ['guest_information_id'=>$gId];
-            CheckIn::insert($param);
+            $info['is_sign'] = -1;
+            $info['msg'] = '未签到';
+            return $info;
         }
-        return response()->s_back(100, '成功');
     }
+
     //最新家博会信息
     public function expo(){
         //INSERT INTO home_decoration_expo (title,description,daterange) VALUES ('第八届家博会','家博会简介内容',$$['2023-04-01 07:00:00', '2023-06-01 08:00:00']$$);
         $data = HomeDecorationExpo::orderBy('id','desc')->first();
-
-        $reData = [];
-        $reData['id'] = $data->id;
-        $reData['title'] = $data->title;
-        $reData['description'] = $data->description;
-        $reData['daterange'] = $data->daterange;
-        $reData['status'] = $data->status;
-        $reData['created_at'] = $data->created_at;
-        $reData['updated_at'] = $data->updated_at;
-        return response()->s_back(100, '查询成功',$reData);
+        return ['msg'=>'成功','data'=>$data->toArray()];
     }
 
     //用餐安排
@@ -116,7 +118,7 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $expo_id = $request->get('expo_id',1);
-        if(empty($expo_id))return response()->e_back(502, '家博会ID不能为空');
+        if(empty($expo_id))return $this->conflict('家博会ID不能为空');
         $where = [];
         if(!empty($expo_id))
         {
@@ -130,24 +132,8 @@ class IndexController extends Controller{
         //INSERT INTO dining_arrangements (home_decoration_expo_id,date,breakfast_place,breakfast_picture,lunch_place,lunch_picture,dinner_place,dinner_picture) VALUES (1,'2022-04-25','宝辉酒店','','宝辉酒店','','宝辉酒店','');
         //INSERT INTO dining_arrangements (home_decoration_expo_id,date,breakfast_place,breakfast_picture,lunch_place,lunch_picture,dinner_place,dinner_picture) VALUES (1,'2022-04-26','城市客厅','','城市客厅','','城市客厅','');
         //INSERT INTO dining_arrangements (home_decoration_expo_id,date,breakfast_place,breakfast_picture,lunch_place,lunch_picture,dinner_place,dinner_picture) VALUES (1,'2022-04-27','皇厨酒店','','皇厨酒店','','皇厨酒店','');
+        return ['msg'=>'成功','count'=>$count, 'data'=>$daList->toArray()];
 
-        $data = [];
-        foreach ($daList as $k => $v)
-        {
-            $data[$k]['id']   =   $v->id;
-            $data[$k]['home_decoration_expo_id']   =   $v->home_decoration_expo_id;
-            $data[$k]['date']   =   $v->date;
-            $data[$k]['breakfast_place']   =   $v->breakfast_place;
-            $data[$k]['breakfast_picture']   =   $v->breakfast_picture;
-            $data[$k]['lunch_place']   =   $v->lunch_place;
-            $data[$k]['lunch_picture']   =   $v->lunch_picture;
-            $data[$k]['dinner_place']   =   $v->dinner_place;
-            $data[$k]['dinner_picture']   =   $v->dinner_picture;
-            $data[$k]['status']   =   $v->status;
-            $data[$k]['created_at']   =   $v->created_at;
-        }
-
-        return response()->s_back(100, '成功', array('count'=>$count, 'list'=>$data));
     }
 
     //行程安排
@@ -156,7 +142,7 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $expo_id = $request->get('expo_id',1);
-        if(empty($expo_id))return response()->e_back(502, '家博会ID不能为空');
+        if(empty($expo_id))return $this->conflict('家博会ID不能为空');
         $where = [];
         if(!empty($expo_id))
         {
@@ -174,19 +160,7 @@ class IndexController extends Controller{
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-28','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-29','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-30','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
-
-        $data = [];
-        foreach ($taList as $k => $v)
-        {
-            $data[$k]['id']   =   $v->id;
-            $data[$k]['home_decoration_expo_id']   =   $v->home_decoration_expo_id;
-            $data[$k]['date']   =   $v->date;
-            $data[$k]['scheduling']   =   $v->scheduling;
-            $data[$k]['status']   =   $v->status;
-            $data[$k]['created_at']   =   $v->created_at;
-        }
-
-        return response()->s_back(100, '成功', array('count'=>$count, 'list'=>$data));
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
 
     //演讲活动
@@ -195,7 +169,7 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $expo_id = $request->get('expo_id',1);
-        if(empty($expo_id))return response()->e_back(502, '家博会ID不能为空');
+        if(empty($expo_id))return $this->conflict('家博会ID不能为空');
         $where = [];
         if(!empty($expo_id))
         {
@@ -214,22 +188,125 @@ class IndexController extends Controller{
         //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题5','2022-04-29','09:00','11:00','家具小镇','李四五','王五五');
         //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题6','2022-04-30','09:00','11:00','家具小镇','李四六','王五六');
 
-        $data = [];
-        foreach ($taList as $k => $v)
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
+    //宣传片
+    public function advertisingVideo(Request $request)
+    {
+        $currpage = (int)$request->post('currpage',1);
+        $limit = (int)$request->post('limit', 10);
+        $id = $request->post('id');
+        $where = [];
+        if(!empty($id))
         {
-            $data[$k]['id']   =   $v->id;
-            $data[$k]['home_decoration_expo_id']   =   $v->home_decoration_expo_id;
-            $data[$k]['title']   =   $v->title;
-            $data[$k]['date']   =   $v->date;
-            $data[$k]['time_start']   =   $v->time_start;
-            $data[$k]['time_end']   =   $v->time_end;
-            $data[$k]['place']   =   $v->place;
-            $data[$k]['host']   =   $v->host;
-            $data[$k]['guest']   =   $v->guest;
-            $data[$k]['status']   =   $v->status;
-            $data[$k]['created_at']   =   $v->created_at;
+            $where[] = ['id','=',$id];
         }
 
-        return response()->s_back(100, '成功', array('count'=>$count, 'list'=>$data));
+        $count = AdvertisingVideo::where($where)->count();
+        $taList = AdvertisingVideo::select(['id','title',
+            'video','status','created_at'
+        ])->where($where)->forPage($currpage, $limit)->get();
+
+        //INSERT INTO advertising_video (title,video) VALUES('视频1','视频文件');
+        //INSERT INTO advertising_video (title,video) VALUES('视频2','视频文件');
+        //INSERT INTO advertising_video (title,video) VALUES('视频3','视频文件');
+        //INSERT INTO advertising_video (title,video) VALUES('视频4','视频文件');
+        //INSERT INTO advertising_video (title,video) VALUES('视频5','视频文件');
+        //INSERT INTO advertising_video (title,video) VALUES('视频6','视频文件');
+
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
+    //酒店列表
+    public function hotelInformation(Request $request)
+    {
+        $currpage = (int)$request->post('currpage',1);
+        $limit = (int)$request->post('limit', 10);
+        $id = $request->post('id');
+        $where = [];
+        if(!empty($id))
+        {
+            $where[] = ['id','=',$id];
+        }
+
+        $count = HotelInformation::where($where)->count();
+        $taList = HotelInformation::select(['id','name',
+            'address','telephone','wifi_password','breakfast_information','video',
+            'liaison','liaison_phone','director','director_phone',
+            'status','created_at'
+
+        ])->where($where)->forPage($currpage, $limit)->get();
+
+        //INSERT INTO hotel_information (name,address,telephone,wifi_password,liaison,liaison_phone,director,director_phone) VALUES('南康大酒店','南康区天马山大道','0709-12345678','88888888','李四','15107970001','王五','15107970011');
+
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
+    //交通信息列表
+    public function trafficInformation(Request $request)
+    {
+        $currpage = (int)$request->post('currpage',1);
+        $limit = (int)$request->post('limit', 10);
+        $id = $request->post('id');
+        $where = [];
+        if(!empty($id))
+        {
+            $where[] = ['id','=',$id];
+        }
+
+        $count = TrafficInformation::where($where)->count();
+        $taList = TrafficInformation::select(['id','type',
+            'title','pictures', 'status','created_at'
+        ])->where($where)->forPage($currpage, $limit)->get();
+
+        //INSERT INTO traffic_information (type,title) VALUES('航空时刻表','2022年XXXX航班时刻表');
+        //INSERT INTO traffic_information (type,title) VALUES('列车时刻表','2022年XXXX列车时刻表');
+
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
+    //防疫须知列表
+    public function epidemicPreventionInstructions(Request $request)
+    {
+        $currpage = (int)$request->post('currpage',1);
+        $limit = (int)$request->post('limit', 10);
+        $id = $request->post('id');
+        $where = [];
+        if(!empty($id))
+        {
+            $where[] = ['id','=',$id];
+        }
+
+        $count = EpidemicPreventionInstructions::where($where)->count();
+        $taList = EpidemicPreventionInstructions::select(['id','content'
+        ])->where($where)->forPage($currpage, $limit)->get();
+
+        //INSERT INTO epidemic_prevention_instructions (content) VALUES('航空时刻表2022年XXXX航班时刻表');
+        //INSERT INTO epidemic_prevention_instructions (content) VALUES('列车时刻表2022年XXXX列车时刻表');
+
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
+    //本地信息(简介)
+    public function localInformation(Request $request)
+    {
+        $currpage = (int)$request->post('currpage',1);
+        $limit = (int)$request->post('limit', 10);
+        $id = $request->post('id');
+        $where = [];
+        if(!empty($id))
+        {
+            $where[] = ['id','=',$id];
+        }
+
+        $count = LocalInformation::where($where)->count();
+        $taList = LocalInformation::select(['id','title','description','pictures','status','created_at'
+        ])->where($where)->forPage($currpage, $limit)->get();
+
+        //INSERT INTO epidemic_prevention_instructions (content) VALUES('航空时刻表2022年XXXX航班时刻表');
+        //INSERT INTO epidemic_prevention_instructions (content) VALUES('列车时刻表2022年XXXX列车时刻表');
+
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
 }
