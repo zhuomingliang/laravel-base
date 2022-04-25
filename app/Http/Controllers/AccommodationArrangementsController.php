@@ -8,7 +8,7 @@ use App\Models\AccommodationArrangements;
 class AccommodationArrangementsController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return AccommodationArrangements::where($request->only(['date', 'status']))->latest()->paginate(
+        return AccommodationArrangements::where($request->only(['hotel', 'status']))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -22,8 +22,9 @@ class AccommodationArrangementsController extends Controller {
                 'home_decoration_expo_id', 'hotel', 'storey_info', 'contacts',
                 'contact_telephone', 'status'
             ]);
-            $data['home_decoration_expo_id'] = 1;
 
+            $data['home_decoration_expo_id'] = 1;
+            $data['storey_info'] = json_encode($data['storey_info']);
             AccommodationArrangements::insert($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该地点');
@@ -39,10 +40,13 @@ class AccommodationArrangementsController extends Controller {
     //修改
     public function PutIndex(Request $request) {
         try {
-            AccommodationArrangements::where('id', (int)$request->get('id', 0))->update($request->only([
-                  'home_decoration_expo_id', 'hotel', 'storey_info', 'contacts',
+            $data = $request->only([
+                'hotel', 'storey_info', 'contacts',
                 'contact_telephone', 'status'
-            ]));
+            ]);
+
+            $data['storey_info'] = json_encode($data['storey_info']);
+            AccommodationArrangements::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该地点');
         }
