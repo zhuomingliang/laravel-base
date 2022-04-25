@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 639a435... 演讲
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -43,6 +47,7 @@ Route::post('/sanctum/token', function (Request $request) {
 
     return $user->createToken($request->device_name)->plainTextToken;
 });
+<<<<<<< HEAD
 
 
 
@@ -62,3 +67,5 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'],function (){
     Route::any('localInformation', 'IndexController@localInformation');//本地信息(简介)
 
 });
+=======
+>>>>>>> parent of 639a435... 演讲
