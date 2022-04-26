@@ -45,8 +45,6 @@ class RideArrangementsController extends Controller {
                 'driver_phone', 'commentator', 'commentator_phone', 'attendants', 'attendants_phone', 'status'
             ]);
 
-            $data['home_decoration_expo_id'] = 1;
-
             RideArrangements::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该数据');
