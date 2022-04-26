@@ -23,7 +23,7 @@ class SpeechActivitiesController extends Controller {
     public function PostIndex(Request $request) {
         try {
             $data = $request->only([
-                'home_decoration_expo_id', 'title', 'date', 'time_start', 'time_end', 'place',
+                'home_decoration_expo_id', 'date', 'start_time', 'end_time', 'title', 'place',
                 'host', 'guest', 'status'
             ]);
 
@@ -40,7 +40,7 @@ class SpeechActivitiesController extends Controller {
     public function PutIndex(Request $request) {
         try {
             $data = $request->only([
-               'title', 'date', 'time_start', 'time_end', 'place',
+                'date', 'start_time', 'end_time', 'title', 'place',
                 'host', 'guest', 'status'
             ]);
 
