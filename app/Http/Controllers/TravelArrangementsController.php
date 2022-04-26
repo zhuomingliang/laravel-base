@@ -18,10 +18,16 @@ class TravelArrangementsController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            TravelArrangements::insert($request->only([
-                'home_decoration_expo_id', 'date', 'scheduling', 'status'
-            ]));
+            $data = $request->only([
+                'home_decoration_expo_id', 'date', 'scheduling'
+            ]);
+
+            $data['home_decoration_expo_id'] = 1;
+            $data['scheduling'] = json_encode($data['scheduling']);
+
+            TravelArrangements::insert($data);
         } catch (\Exception $e) {
+            return $this->conflict($e->getMessage());
             return $this->conflict('已存在该时间');
         }
 
@@ -31,9 +37,13 @@ class TravelArrangementsController extends Controller {
     //修改
     public function PutIndex(Request $request) {
         try {
-            TravelArrangements::where('id', (int)$request->get('id', 0))->update($request->only([
-                'home_decoration_expo_id', 'date', 'scheduling', 'status'
-            ]));
+            $data = $request->only([
+                'date', 'scheduling'
+            ]);
+
+            $data['scheduling'] = json_encode($data['scheduling']);
+
+            TravelArrangements::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该时间');
         }

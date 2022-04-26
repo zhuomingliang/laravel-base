@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
+
+            $table->unique(['home_decoration_expo_id', 'date']);
         });
 
         DB::statement("COMMENT ON TABLE travel_arrangements IS '行程安排'");
