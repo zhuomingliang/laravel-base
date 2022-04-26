@@ -22,10 +22,14 @@ class SpeechActivitiesController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            SpeechActivities::insert($request->only([
+            $data = $request->only([
                 'home_decoration_expo_id', 'title', 'date', 'time_start', 'time_end', 'place',
                 'host', 'guest', 'status'
-            ]));
+            ]);
+
+            $data['home_decoration_expo_id'] = 1;
+
+            SpeechActivities::insert($data);
         } catch (\Exception $e) {
             return $this->conflict($e->getMessage());
         }
