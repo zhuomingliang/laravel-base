@@ -18,10 +18,14 @@ class RideArrangementsController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            RideArrangements::insert($request->only([
+            $data = $request->only([
                 'home_decoration_expo_id', 'auto_no', 'license_plate_number', 'driver',
                 'driver_phone', 'commentator', 'commentator_phone', 'attendants', 'attendants_phone', 'status'
-            ]));
+            ]);
+
+            $data['home_decoration_expo_id'] = 1;
+
+            RideArrangements::insert($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该数据');
         }
@@ -36,10 +40,14 @@ class RideArrangementsController extends Controller {
     //修改
     public function PutIndex(Request $request) {
         try {
-            RideArrangements::where('id', (int)$request->get('id', 0))->update($request->only([
-                'home_decoration_expo_id', 'auto_no', 'license_plate_number', 'driver',
+            $data = $request->only([
+                'auto_no', 'license_plate_number', 'driver',
                 'driver_phone', 'commentator', 'commentator_phone', 'attendants', 'attendants_phone', 'status'
-            ]));
+            ]);
+
+            $data['home_decoration_expo_id'] = 1;
+
+            RideArrangements::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该数据');
         }
