@@ -26,8 +26,7 @@ class HomeDecorationExpoController extends Controller {
 
             HomeDecorationExpo::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
-            return $this->conflict('已存在该家博会');
+            return $this->conflict('该家博会标题已存在，或者时间与另一个家博会时间重复');
         }
 
         return $this->created();
@@ -44,7 +43,7 @@ class HomeDecorationExpoController extends Controller {
 
             HomeDecorationExpo::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
-            return $this->conflict('已存在该家博会');
+            return $this->conflict('该家博会标题已存在，或者时间与另一个家博会时间重复');
         }
 
         return $this->noContent();
