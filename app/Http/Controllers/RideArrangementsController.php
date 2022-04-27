@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RideArrangements;
+use App\Imports\RideArrangementsImport as Import;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RideArrangementsController extends Controller {
     //获取
@@ -35,6 +37,12 @@ class RideArrangementsController extends Controller {
 
     //导入
     public function PostImport() {
+        try {
+            Excel::import(new Import,request()->file('file'));
+        } catch (\Exception $e) {
+            return $this->conflict($e->getMessage());
+        }
+        return $this->created();
     }
 
     //修改

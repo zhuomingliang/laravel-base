@@ -10,6 +10,10 @@ class GuestInformation extends Model {
     use HasFactory;
     use SoftDeletes;
 
+
+//    protected $fillable = ['home_decoration_expo_id','full_name','phone','from','status'];
+    protected $guarded = [];
+
     /**
      * Prepare a date for array / JSON serialization.
      *

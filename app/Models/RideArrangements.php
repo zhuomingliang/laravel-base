@@ -10,6 +10,7 @@ class RideArrangements extends Model {
     use HasFactory;
     use SoftDeletes;
 
+    protected $guarded = [];
     /**
      * Prepare a date for array / JSON serialization.
      *
