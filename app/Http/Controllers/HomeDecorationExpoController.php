@@ -61,4 +61,16 @@ class HomeDecorationExpoController extends Controller {
 
         return $this->unprocessableEntity();
     }
+
+    //修改状态
+    public function PutStatus(Request $request) {
+        $model = HomeDecorationExpo::findOrFail((int) $request->get('id'));
+
+        try {
+            $model->update($request->only(['status']));
+        } catch (\Exception $e) {
+        }
+
+        return $this->noContent();
+    }
 }
