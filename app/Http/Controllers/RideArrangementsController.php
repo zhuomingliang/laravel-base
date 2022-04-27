@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class RideArrangementsController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return RideArrangements::where($request->only(['date', 'status']))->latest()->paginate(
+        return RideArrangements::where(array_filter($request->only(['date', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -52,8 +52,6 @@ class RideArrangementsController extends Controller {
                 'auto_no', 'license_plate_number', 'driver',
                 'driver_phone', 'commentator', 'commentator_phone', 'attendants', 'attendants_phone', 'status'
             ]);
-
-            $data['home_decoration_expo_id'] = 1;
 
             RideArrangements::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {

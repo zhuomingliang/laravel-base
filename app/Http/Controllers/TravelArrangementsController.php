@@ -27,7 +27,6 @@ class TravelArrangementsController extends Controller {
 
             TravelArrangements::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
             return $this->conflict('已存在该时间');
         }
 
