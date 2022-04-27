@@ -8,7 +8,7 @@ use App\Models\HomeDecorationExpo;
 class HomeDecorationExpoController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return HomeDecorationExpo::where($request->only(['status']))->latest()->paginate(
+        return HomeDecorationExpo::where($request->only(array_filter(['title', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -18,10 +18,15 @@ class HomeDecorationExpoController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            HomeDecorationExpo::insert($request->only([
-                'title', 'description', 'daterange', 'status'
-            ]));
+            $data = $request->only([
+                'daterange', 'title', 'description', 'status'
+            ]);
+
+            $data['daterange'] = '[' . implode(',', $data['daterange']) . ']';
+
+            HomeDecorationExpo::insert($data);
         } catch (\Exception $e) {
+            return $this->conflict($e->getMessage());
             return $this->conflict('已存在该家博会');
         }
 
@@ -31,9 +36,13 @@ class HomeDecorationExpoController extends Controller {
     //修改
     public function PutIndex(Request $request) {
         try {
-            HomeDecorationExpo::where('id', (int)$request->get('id', 0))->update($request->only([
-                'title', 'description', 'daterange', 'status'
-            ]));
+            $data = $request->only([
+                'daterange', 'title', 'description', 'status'
+            ]);
+
+            $data['daterange'] = '[' . implode(',', $data['daterange']) . ']';
+
+            HomeDecorationExpo::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该家博会');
         }

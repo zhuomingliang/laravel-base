@@ -13,9 +13,9 @@ return new class extends Migration {
     public function up() {
         Schema::create('home_decoration_expo', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->unique()->comment('家博会主题');
-            $table->text('description')->comment('家博会简介内容');
             $table->string('daterange')->comment('时间范围');
+            $table->string('title')->unique()->comment('家博会主题');
+            $table->text('description')->nullable()->comment('家博会简介内容');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
