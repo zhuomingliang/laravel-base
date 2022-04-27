@@ -58,4 +58,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function () {
     Route::any('trafficInformation', 'IndexController@trafficInformation');//交通信息列表
     Route::any('epidemicPreventionInstructions', 'IndexController@epidemicPreventionInstructions');//防疫信息列表
     Route::any('localInformation', 'IndexController@localInformation');//本地信息(简介)
+    Route::any('rideArrangements', 'IndexController@rideArrangements');//乘车安排列表
+    Route::any('accommodationArrangements', 'IndexController@accommodationArrangements');//住宿安排列表
+    Route::any('vehicleSafeguard', 'IndexController@vehicleSafeguard');//车辆保障
 });

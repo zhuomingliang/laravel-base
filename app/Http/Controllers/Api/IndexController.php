@@ -15,6 +15,9 @@ use App\Models\HotelInformation;
 use App\Models\TrafficInformation;
 use App\Models\EpidemicPreventionInstructions;
 use App\Models\LocalInformation;
+use App\Models\RideArrangements;
+use App\Models\AccommodationArrangements;
+use App\Models\VehicleSafeguard;
 use Illuminate\Support\Facades\Log;
 class IndexController extends Controller{
 
@@ -30,9 +33,9 @@ class IndexController extends Controller{
         $phone = $data['phone'];
         $expo_id = (int)$data['expo_id'];
         $uniq_no = $data['uniq_no'];
-        if(empty($user))return response()->e_back('502','请输入姓名');
-        if(empty($phone) && strlen($phone) != 11)return response()->e_back('502','请输入正确的手机号码');
-        if(empty($uniq_no))return response()->e_back('502','缺少参数uniq_no');
+        if(empty($user))return $this->conflict('请输入姓名');
+        if(empty($phone) && strlen($phone) != 11)return $this->conflict('请输入正确的手机号码');
+        if(empty($uniq_no))return $this->conflict('缺少参数uniq_no');
         $ginnfo = GuestInformation::where(['guest_information.full_name'=>$user,'guest_information.phone'=>$phone,'guest_information.home_decoration_expo_id'=>$expo_id])
             ->leftJoin('check_in','guest_information.id','=','check_in.guest_information_id')
             ->first();
@@ -295,4 +298,78 @@ class IndexController extends Controller{
 
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
+
+    //乘车安排列表
+    public function rideArrangements(Request $request)
+    {
+        $currpage = (int)$request->get('currpage',1);
+        $limit = (int)$request->get('limit', 10);
+        $id = $request->get('id');
+        $where = [];
+        if(!empty($id))
+        {
+            $where[] = ['id','=',$id];
+        }
+
+        $count = RideArrangements::where($where)->count();
+        $taList = RideArrangements::select(['id','home_decoration_expo_id','auto_no',
+            'license_plate_number','driver','driver_phone','commentator','commentator_phone',
+            'attendants','attendants_phone',
+            'status','created_at'
+        ])->where($where)->forPage($currpage, $limit)->get();
+
+        //INSERT INTO ride_arrangements (home_decoration_expo_id,auto_no,license_plate_number,driver,driver_phone,commentator,commentator_phone,attendants,attendants_phone) VALUES(1,'1号车','赣B125M','张三1','18574875158','张三上','18574875159','李四','18574875158');
+        //INSERT INTO ride_arrangements (home_decoration_expo_id,auto_no,license_plate_number,driver,driver_phone,commentator,commentator_phone,attendants,attendants_phone) VALUES(1,'2号车','赣B126M','张三2','18574875158','张三上','18574875159','李四','18574875158');
+
+
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
+    //住宿安排列表
+    public function accommodationArrangements(Request $request)
+    {
+        $currpage = (int)$request->get('currpage',1);
+        $limit = (int)$request->get('limit', 10);
+        $id = $request->get('id');
+        $where = [];
+        if(!empty($id))
+        {
+            $where[] = ['id','=',$id];
+        }
+
+        $count = AccommodationArrangements::where($where)->count();
+        $taList = AccommodationArrangements::select(['id','home_decoration_expo_id','hotel',
+            'storey_info','contacts','contact_telephone','status','created_at'
+        ])->where($where)->forPage($currpage, $limit)->get();
+
+        //INSERT INTO accommodation_arrangements (home_decoration_expo_id,hotel,storey_info,contacts,contact_telephone) VALUES(1,'南康大酒店','{ "房号首位数": "1","对应楼号/层": "1","房态图": "第二次演讲"}','张三上','18574875159');
+        //INSERT INTO accommodation_arrangements (home_decoration_expo_id,hotel,storey_info,contacts,contact_telephone) VALUES(1,'南康大酒店1','{ "房号首位数": "2","对应楼号/层": "2","房态图": "第二次演讲"}','张三','18574875151');
+
+
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
+    //车辆保障
+    public function vehicleSafeguard(Request $request)
+    {
+        $currpage = (int)$request->get('currpage',1);
+        $limit = (int)$request->get('limit', 10);
+        $id = $request->get('id');
+        $where = [];
+        if(!empty($id))
+        {
+            $where[] = ['id','=',$id];
+        }
+
+        $count = VehicleSafeguard::where($where)->count();
+        $taList = VehicleSafeguard::select(['id','name','phone','status','created_at'
+        ])->where($where)->forPage($currpage, $limit)->get();
+
+        //INSERT INTO vehicle_safeguard (name,phone) VALUES('张三上','18574875159');
+        //INSERT INTO vehicle_safeguard (name,phone) VALUES('张三','18574875151');
+
+
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
 }

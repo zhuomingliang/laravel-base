@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class VehicleSafeguard extends Model {
     use HasFactory;
     use SoftDeletes;
-
+    protected $table = 'vehicle_safeguard';
     /**
      * Prepare a date for array / JSON serialization.
      *
