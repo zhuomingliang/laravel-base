@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SpeechActivities as Model;
 use Illuminate\Http\Request;
+use App\Imports\SpeechActivitiesImport as Import;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
  * 演讲活动
@@ -11,15 +14,20 @@ use Illuminate\Http\Request;
 class SpeechActivitiesController extends Controller
 {
     //获取
-    public function getIndex()
+    public function getIndex(Request $request)
     {
+
+        return Model::where($request->only(['date', 'status']))->latest()->paginate(
+            (int) $request->get('per_page'),
+            ['*'],
+            'current_page'
+        );
 
     }
 
     //新增
-    public function PostIndex()
+    public function PostIndex(Request $request)
     {
-<<<<<<< HEAD
         try {
             Model::insert($request->only([
                 'home_decoration_expo_id', 'title', 'date', 'time_start', 'time_end', 'place',
@@ -29,21 +37,36 @@ class SpeechActivitiesController extends Controller
             return $this->conflict($e->getMessage());
         }
         return $this->created();
-=======
->>>>>>> parent of 639a435... 演讲
 
     }
 
     //修改
-    public function PutIndex()
+    public function PutIndex(Request $request)
     {
+        try {
+            Model::where('id', (int)$request->get('id', 0))->update($request->only([
+                'home_decoration_expo_id', 'title', 'date', 'time_start', 'time_end', 'place',
+                'host', 'guest', 'status'
+            ]));
+        } catch (\Exception $e) {
+            return $this->conflict('已存在该演讲');
+        }
 
+        return $this->noContent();
+    }
+    //导入
+    public function PostImport() {
+        try {
+            Excel::import(new Import,request()->file('file'));
+        } catch (\Exception $e) {
+            return $this->conflict($e->getMessage());
+        }
+        return $this->created();
     }
 
     //删除
-    public function DeleteIndex()
+    public function DeleteIndex(Request $request)
     {
-<<<<<<< HEAD
         try {
             if (Model::where('id', (int)$request->get('id', 0))->delete()) {
                 return $this->noContent();
@@ -53,14 +76,18 @@ class SpeechActivitiesController extends Controller
 
 
         return $this->unprocessableEntity();
-=======
-
->>>>>>> parent of 639a435... 演讲
     }
 
     //修改状态
-    public function PutStatus()
+    public function PutStatus(Request $request)
     {
+        $model = Model::findOrFail((int) $request->get('id'));
 
+        try {
+            $model->update($request->only(['status']));
+        } catch (\Exception $e) {
+        }
+
+        return $this->noContent();
     }
 }

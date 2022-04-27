@@ -8,7 +8,7 @@ use App\Models\AccommodationArrangements;
 class AccommodationArrangementsController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return AccommodationArrangements::where($request->only(['hotel', 'status']))->latest()->paginate(
+        return AccommodationArrangements::where(array_filter($request->only(['hotel', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'

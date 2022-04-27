@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\GuestInformation;
+use App\Imports\GuestInformationImport as Import;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GuestInformationController extends Controller {
     //获取
@@ -32,6 +34,13 @@ class GuestInformationController extends Controller {
 
     //导入
     public function PostImport(Request $request) {
+        //导入方法
+        try {
+            Excel::import(new Import,request()->file('file'));
+        } catch (\Exception $e) {
+            return $this->conflict($e->getMessage());
+        }
+        return $this->created();
     }
 
     //修改

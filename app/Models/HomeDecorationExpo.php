@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class HomeDecorationExpo extends Model {
     use HasFactory;
     use SoftDeletes;
+
     protected $table = 'home_decoration_expo';
     /**
      * Prepare a date for array / JSON serialization.

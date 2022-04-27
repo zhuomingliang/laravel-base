@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\LocalInformation as Model;
+use App\Models\LocalInformation;
 
-class LocalInformationController extends Controller
-{
+class LocalInformationController extends Controller {
     //获取
-    public function getIndex(Request $request)
-    {
-        return Model::where($request->only(['created_at', 'status']))->latest()->paginate(
+    public function getIndex(Request $request) {
+        return LocalInformation::where($request->only(array_filter(['title', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -18,56 +16,57 @@ class LocalInformationController extends Controller
     }
 
     //新增
-    public function PostIndex(Request $request)
-    {
+    public function PostIndex(Request $request) {
         try {
-            Model::insert($request->only([
+            $data = $request->only([
                 'title', 'description', 'pictures', 'status'
-            ]));
+            ]);
+
+            $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+
+            LocalInformation::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }
 
     //修改
-    public function PutIndex(Request $request)
-    {
+    public function PutIndex(Request $request) {
         try {
-            Model::where('id', (int)$request->get('id', 0))->update($request->only([
+            $data = $request->only([
                 'title', 'description', 'pictures', 'status'
-            ]));
+            ]);
+
+            $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+
+            LocalInformation::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();
     }
 
     //删除
-    public function DeleteIndex(Request $request)
-    {
+    public function DeleteIndex(Request $request) {
         try {
-            if (Model::where('id', (int)$request->get('id', 0))->delete()) {
+            if (LocalInformation::where('id', (int)$request->get('id', 0))->delete()) {
                 return $this->noContent();
             }
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
         }
 
         return $this->unprocessableEntity();
     }
 
     //修改状态
-    public function PutStatus(Request $request)
-    {
-
-        $model = Model::findOrFail((int) $request->get('id'));
+    public function PutStatus(Request $request) {
+        $model = LocalInformation::findOrFail((int) $request->get('id'));
 
         try {
             $model->update($request->only(['status']));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
         }
 
         return $this->noContent();
