@@ -12,7 +12,7 @@ use App\Models\SpeechActivities;
 class SpeechActivitiesController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return SpeechActivities::where($request->only(['date', 'status']))->latest()->paginate(
+        return SpeechActivities::where(array_filter($request->only(['date', 'title', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
