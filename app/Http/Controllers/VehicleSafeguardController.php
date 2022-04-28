@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class VehicleSafeguardController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return Model::where($request->only(['created_at', 'status']))->latest()->paginate(
+        return Model::where($request->only(array_filter(['name', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
