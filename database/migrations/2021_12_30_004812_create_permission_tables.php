@@ -231,7 +231,7 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'HotelInformation/PutStatus']);
 
         // 车辆保障
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '联系人列表', 'name' => 'VehicleSafeguard/getIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '车辆保障', 'name' => 'VehicleSafeguard/getIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增联系人', 'name' => 'VehicleSafeguard/PostIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '数据导入',   'name' => 'VehicleSafeguard/PostImport']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改联系人', 'name' => 'VehicleSafeguard/PutIndex']);
