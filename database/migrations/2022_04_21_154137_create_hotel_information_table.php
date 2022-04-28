@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('hotel_information', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('酒店名');
+            $table->string('hotel')->comment('酒店名');
             $table->string('address')->comment('地址');
             $table->string('telephone')->comment('前台电话');
             $table->string('wifi_password')->nullable()->comment('WIFI密码');

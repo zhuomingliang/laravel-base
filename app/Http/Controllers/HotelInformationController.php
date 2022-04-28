@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\HotelInformation as Model;
+use App\Models\HotelInformation;
 
-class HotelInformationController extends Controller
-{
+class HotelInformationController extends Controller {
     //获取
-    public function getIndex(Request $request)
-    {
-        return Model::where($request->only(['created_at', 'status']))->latest()->paginate(
+    public function getIndex(Request $request) {
+        return HotelInformation::where($request->only(['hotel', 'status']))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -18,13 +16,20 @@ class HotelInformationController extends Controller
     }
 
     //新增
-    public function PostIndex(Request $request)
-    {
+    public function PostIndex(Request $request) {
         try {
-            Model::insert($request->only([
-                'name', 'address', 'telephone', 'wifi_password', 'breakfast_information', 'video'
+            $data = $request->only([
+                'hotel', 'address', 'telephone', 'wifi_password', 'breakfast_information', 'video'
                 , 'liaison', 'liaison_phone', 'director', 'director_phone','status'
-            ]));
+            ]);
+
+            if (isset($data['video'][0])) {
+                $data['video'] = $data['video'][0];
+            } else {
+                $data['video'] = '';
+            }
+
+            HotelInformation::insert($data);
         } catch (\Exception $e) {
             return $this->conflict($e->getMessage());
         }
@@ -32,13 +37,21 @@ class HotelInformationController extends Controller
     }
 
     //修改
-    public function PutIndex(Request $request)
-    {
+    public function PutIndex(Request $request) {
         try {
-            Model::where('id', (int)$request->get('id', 0))->update($request->only([
-                'name', 'address', 'telephone', 'wifi_password', 'breakfast_information', 'video'
+            $data = $request->only([
+                'hotel', 'address', 'telephone', 'wifi_password', 'breakfast_information', 'video'
                 , 'liaison', 'liaison_phone', 'director', 'director_phone','status'
-            ]));
+            ]);
+
+
+            if (isset($data['video'][0])) {
+                $data['video'] = $data['video'][0];
+            } else {
+                $data['video'] = '';
+            }
+
+            HotelInformation::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict($e->getMessage());
         }
@@ -47,10 +60,9 @@ class HotelInformationController extends Controller
     }
 
     //删除
-    public function DeleteIndex(Request $request)
-    {
+    public function DeleteIndex(Request $request) {
         try {
-            if (Model::where('id', (int)$request->get('id', 0))->delete()) {
+            if (HotelInformation::where('id', (int)$request->get('id', 0))->delete()) {
                 return $this->noContent();
             }
         } catch (\Exception $e) {
@@ -61,10 +73,8 @@ class HotelInformationController extends Controller
     }
 
     //修改状态
-    public function PutStatus(Request $request)
-    {
-
-        $model = Model::findOrFail((int) $request->get('id'));
+    public function PutStatus(Request $request) {
+        $model = HotelInformation::findOrFail((int) $request->get('id'));
 
         try {
             $model->update($request->only(['status']));
