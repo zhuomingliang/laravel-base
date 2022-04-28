@@ -31,7 +31,7 @@ class HotelInformationController extends Controller {
 
             HotelInformation::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }
@@ -53,7 +53,7 @@ class HotelInformationController extends Controller {
 
             HotelInformation::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();
