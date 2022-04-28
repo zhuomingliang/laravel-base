@@ -12,7 +12,7 @@ use App\Models\AdvertisingVideo;
 class AdvertisingVideoController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return AdvertisingVideo::where($request->only(array_filter(['title', 'status'])))->latest()->paginate(
+        return AdvertisingVideo::where(array_filter($request->only(['title', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'

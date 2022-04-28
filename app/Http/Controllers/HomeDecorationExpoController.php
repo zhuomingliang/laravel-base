@@ -8,7 +8,7 @@ use App\Models\HomeDecorationExpo;
 class HomeDecorationExpoController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return HomeDecorationExpo::where($request->only(array_filter(['title', 'status'])))->latest()->paginate(
+        return HomeDecorationExpo::where(array_filter($request->only(['title', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
