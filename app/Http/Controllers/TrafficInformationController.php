@@ -25,11 +25,13 @@ class TrafficInformationController extends Controller {
                 'type', 'title', 'pictures', 'status'
             ]);
 
-            $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+            if (isset(($data['pictures'])) && is_array($data['pictures'])) {
+                $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+            }
 
             TrafficInformation::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }
@@ -41,11 +43,13 @@ class TrafficInformationController extends Controller {
                 'type', 'title', 'pictures', 'status'
             ]);
 
-            $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+            if (isset(($data['pictures'])) && is_array($data['pictures'])) {
+                $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+            }
 
             TrafficInformation::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();

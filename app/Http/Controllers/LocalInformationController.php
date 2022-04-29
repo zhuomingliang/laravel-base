@@ -22,7 +22,9 @@ class LocalInformationController extends Controller {
                 'title', 'description', 'pictures', 'status'
             ]);
 
-            $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+            if (isset(($data['pictures'])) && is_array($data['pictures'])) {
+                $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+            }
 
             LocalInformation::insert($data);
         } catch (\Exception $e) {
@@ -38,8 +40,9 @@ class LocalInformationController extends Controller {
                 'title', 'description', 'pictures', 'status'
             ]);
 
-            $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
-
+            if (isset(($data['pictures'])) && is_array($data['pictures'])) {
+                $data['pictures'] = str_replace(['[', ']'], ['{', '}'], json_encode($data['pictures']));
+            }
             LocalInformation::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该数据');
