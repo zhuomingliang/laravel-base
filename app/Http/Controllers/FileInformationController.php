@@ -34,7 +34,7 @@ class FileInformationController extends Controller {
 
             FileInformation::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }
@@ -54,7 +54,7 @@ class FileInformationController extends Controller {
 
             FileInformation::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();
@@ -67,7 +67,7 @@ class FileInformationController extends Controller {
                 return $this->noContent();
             }
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->unprocessableEntity();
@@ -80,7 +80,7 @@ class FileInformationController extends Controller {
         try {
             $FileInformation->update($request->only(['status']));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();

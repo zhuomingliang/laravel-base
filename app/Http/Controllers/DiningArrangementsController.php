@@ -32,7 +32,7 @@ class DiningArrangementsController extends Controller {
 
             DiningArrangements::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
             return $this->conflict('已存在该地点');
         }
 
@@ -44,7 +44,7 @@ class DiningArrangementsController extends Controller {
         try {
             Excel::import(new Import,request()->file('file'));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }

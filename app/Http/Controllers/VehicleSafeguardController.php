@@ -26,7 +26,7 @@ class VehicleSafeguardController extends Controller {
                 'name', 'phone', 'status'
             ]));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }
@@ -38,7 +38,7 @@ class VehicleSafeguardController extends Controller {
                 'name', 'phone', 'status'
             ]));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();

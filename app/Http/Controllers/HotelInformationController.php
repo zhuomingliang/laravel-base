@@ -66,7 +66,7 @@ class HotelInformationController extends Controller {
                 return $this->noContent();
             }
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->unprocessableEntity();
@@ -79,7 +79,7 @@ class HotelInformationController extends Controller {
         try {
             $model->update($request->only(['status']));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();

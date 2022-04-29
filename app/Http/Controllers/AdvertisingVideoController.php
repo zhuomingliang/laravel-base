@@ -34,7 +34,7 @@ class AdvertisingVideoController extends Controller {
 
             AdvertisingVideo::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }
@@ -54,7 +54,7 @@ class AdvertisingVideoController extends Controller {
 
             AdvertisingVideo::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();
