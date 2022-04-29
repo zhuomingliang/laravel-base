@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EpidemicPreventionInstructions extends Model {
     use HasFactory;
-//    use SoftDeletes;
+    protected $guarded = [];
+
 
     /**
      * Prepare a date for array / JSON serialization.
