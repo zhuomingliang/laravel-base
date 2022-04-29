@@ -26,7 +26,7 @@ class MedicalSecurityController extends Controller {
                 'nurse_address', 'nucleic_acid_testing_address', 'isolation_address', 'status'
             ]));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该日数据');
         }
         return $this->created();
     }
@@ -39,7 +39,7 @@ class MedicalSecurityController extends Controller {
                 'nurse_address', 'nucleic_acid_testing_address', 'isolation_address', 'status'
             ]));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该日数据');
         }
 
         return $this->noContent();

@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('nurse_phone')->nullable()->comment('保障护士电话');
             $table->string('nurse_address')->nullable()->comment('保障护士住宿酒店');
             $table->string('nucleic_acid_testing_address')->nullable()->comment('核酸检测地址');
-            $table->string('isolation_address ')->nullable()->comment('留观隔离地址');
+            $table->string('isolation_address')->nullable()->comment('留观隔离地址');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
