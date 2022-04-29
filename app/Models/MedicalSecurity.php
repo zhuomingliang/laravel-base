@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MedicalSecurity extends Model
-{
+class MedicalSecurity extends Model {
     use HasFactory;
     use SoftDeletes;
+
+    protected $table = 'medical_security';
+
     /**
      * Prepare a date for array / JSON serialization.
      *
