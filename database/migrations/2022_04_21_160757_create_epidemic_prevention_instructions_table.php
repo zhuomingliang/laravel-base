@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\EpidemicPreventionInstructions;
 
 return new class extends Migration {
     /**
@@ -17,6 +18,8 @@ return new class extends Migration {
         });
 
         DB::statement("COMMENT ON TABLE epidemic_prevention_instructions IS '防疫信息'");
+
+        EpidemicPreventionInstructions::create(['id' => 1, 'content' => '内容']);
     }
 
     /**
