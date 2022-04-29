@@ -22,7 +22,8 @@ class MedicalSecurityController extends Controller {
     public function PostIndex(Request $request) {
         try {
             Model::insert($request->only([
-                'title', 'description', 'pictures', 'status'
+                'date', 'doctor', 'doctor_phone', 'doctor_address', 'nurse', 'nurse_phone',
+                'nurse_address', 'nucleic_acid_testing_address', 'isolation_address', 'status'
             ]));
         } catch (\Exception $e) {
             return $this->conflict($e->getMessage());
@@ -34,7 +35,8 @@ class MedicalSecurityController extends Controller {
     public function PutIndex(Request $request) {
         try {
             Model::where('id', (int)$request->get('id', 0))->update($request->only([
-                'title', 'description', 'pictures', 'status'
+                 'date', 'doctor', 'doctor_phone', 'doctor_address', 'nurse', 'nurse_phone',
+                'nurse_address', 'nucleic_acid_testing_address', 'isolation_address', 'status'
             ]));
         } catch (\Exception $e) {
             return $this->conflict($e->getMessage());
