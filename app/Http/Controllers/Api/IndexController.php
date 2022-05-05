@@ -97,7 +97,8 @@ class IndexController extends Controller{
     //最新家博会信息
     public function expo(){
         //INSERT INTO home_decoration_expo (title,description,daterange) VALUES ('第八届家博会','家博会简介内容',$$['2023-04-01 07:00:00', '2023-06-01 08:00:00']$$);
-        $data = HomeDecorationExpo::orderBy('id','desc')->first();
+        //$data = HomeDecorationExpo::orderBy('id','desc')->first();
+        $data = HomeDecorationExpo::getCurrentId();
         return ['msg'=>'成功','data'=>$data->toArray()];
     }
 
