@@ -64,7 +64,7 @@ class IndexController extends Controller{
             DB::commit();
             return ['msg'=>'成功','data'=>''];
         }catch(\Exception $e){
-            log::info('嘉宾签到:'.$e->getMessage());
+            log::info('嘉宾签到:'.'已存在该数据');
             DB::rollBack();
         }
         return $this->conflict('嘉宾签到失败');

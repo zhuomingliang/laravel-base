@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title')->comment('标题');
             $table->text('video')->comment('视频');
-            $table->integer('sort')->comment('排序');
+            $table->integer('sort')->nullable()->comment('排序');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');

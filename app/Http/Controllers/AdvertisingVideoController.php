@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AdvertisingVideo as Model;
+use App\Models\AdvertisingVideo;
 
 /*
  * 宣传片介绍
@@ -12,7 +12,7 @@ use App\Models\AdvertisingVideo as Model;
 class AdvertisingVideoController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return Model::where($request->only(['created_at', 'status']))->latest()->paginate(
+        return AdvertisingVideo::where(array_filter($request->only(['title', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -22,11 +22,19 @@ class AdvertisingVideoController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            Model::insert($request->only([
+            $data = $request->only([
                 'title', 'video', 'sort', 'status'
-            ]));
+            ]);
+
+            if (isset($data['video'][0])) {
+                $data['video'] = $data['video'][0];
+            } else {
+                $data['video'] = '';
+            }
+
+            AdvertisingVideo::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }
@@ -34,11 +42,19 @@ class AdvertisingVideoController extends Controller {
     //修改
     public function PutIndex(Request $request) {
         try {
-            Model::where('id', (int)$request->get('id', 0))->update($request->only([
+            $data = $request->only([
                 'title', 'video', 'sort', 'status'
-            ]));
+            ]);
+
+            if (isset($data['video'][0])) {
+                $data['video'] = $data['video'][0];
+            } else {
+                $data['video'] = '';
+            }
+
+            AdvertisingVideo::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();
@@ -47,7 +63,7 @@ class AdvertisingVideoController extends Controller {
     //删除
     public function DeleteIndex(Request $request) {
         try {
-            if (Model::where('id', (int)$request->get('id', 0))->delete()) {
+            if (AdvertisingVideo::where('id', (int)$request->get('id', 0))->delete()) {
                 return $this->noContent();
             }
         } catch (\Exception $e) {
@@ -58,10 +74,10 @@ class AdvertisingVideoController extends Controller {
 
     //修改状态
     public function PutStatus(Request $request) {
-        $model = Model::findOrFail((int) $request->get('id'));
+        $AdvertisingVideo = AdvertisingVideo::findOrFail((int) $request->get('id'));
 
         try {
-            $model->update($request->only(['status']));
+            $AdvertisingVideo->update($request->only(['status']));
         } catch (\Exception $e) {
         }
 

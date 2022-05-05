@@ -10,6 +10,8 @@ class AdvertisingVideo extends Model {
     use HasFactory;
     use SoftDeletes;
     protected $table = 'advertising_video';
+    protected $guarded = [];
+
 
     /**
      * Prepare a date for array / JSON serialization.

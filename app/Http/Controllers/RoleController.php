@@ -52,9 +52,10 @@ class RoleController extends Controller {
             }
 
             Role::create($request->only([
-                'name', 'guard_name', 'description', 'status'
+                'name', 'guard_name', 'description'
             ]))->syncPermissions($menu);
         } catch (\Exception $e) {
+            return $this->conflict($e->getMessage());
             return $this->conflict('已存在该角色');
         }
 
@@ -70,7 +71,7 @@ class RoleController extends Controller {
         $role = Role::findOrFail((int) $request->get('id'));
         try {
             $role->update($request->only([
-                'name', 'guard_name', 'description', 'status'
+                'name', 'guard_name', 'description'
             ]));
 
             $menu = $request->get('menu');

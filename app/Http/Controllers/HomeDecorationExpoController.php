@@ -8,21 +8,31 @@ use App\Models\HomeDecorationExpo;
 class HomeDecorationExpoController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return HomeDecorationExpo::where($request->only(['status']))->latest()->paginate(
+        return HomeDecorationExpo::where(array_filter($request->only(['title', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
         );
     }
 
+
+    public function getCurrent() {
+        return HomeDecorationExpo::where('status', true)->first();
+    }
+
     //新增
     public function PostIndex(Request $request) {
         try {
-            HomeDecorationExpo::insert($request->only([
-                'title', 'description', 'daterange', 'status'
-            ]));
+            $data = $request->only([
+                'daterange', 'title', 'description', 'status'
+            ]);
+
+            $data['daterange'] = '[' . implode(',', $data['daterange']) . ']';
+
+            HomeDecorationExpo::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict('已存在该家博会');
+            return $this->conflict($e->getMessage());
+            return $this->conflict('该家博会标题已存在，或者时间与另一个家博会时间重复');
         }
 
         return $this->created();
@@ -31,11 +41,15 @@ class HomeDecorationExpoController extends Controller {
     //修改
     public function PutIndex(Request $request) {
         try {
-            HomeDecorationExpo::where('id', (int)$request->get('id', 0))->update($request->only([
-                'title', 'description', 'daterange', 'status'
-            ]));
+            $data = $request->only([
+                'daterange', 'title', 'description', 'status'
+            ]);
+
+            $data['daterange'] = '[' . implode(',', $data['daterange']) . ']';
+
+            HomeDecorationExpo::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
-            return $this->conflict('已存在该家博会');
+            return $this->conflict('该家博会标题已存在，或者时间与另一个家博会时间重复');
         }
 
         return $this->noContent();
@@ -51,5 +65,26 @@ class HomeDecorationExpoController extends Controller {
         }
 
         return $this->unprocessableEntity();
+    }
+
+    //修改状态
+    public function PutStatus(Request $request) {
+        $homeDecorationExpo = HomeDecorationExpo::findOrFail((int) $request->get('id'));
+
+        try {
+            \DB::beginTransaction();
+
+            $data = $request->only(['status']);
+
+            if ($data['status'] === true) {
+                HomeDecorationExpo::where('id', '>', 0)->update(['status' => false]);
+            }
+            $homeDecorationExpo->update($request->only(['status']));
+
+            \DB::commit();
+        } catch (\Exception $e) {
+        }
+
+        return $this->noContent();
     }
 }

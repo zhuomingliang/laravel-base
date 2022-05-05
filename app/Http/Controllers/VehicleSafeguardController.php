@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class VehicleSafeguardController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return Model::where($request->only(['created_at', 'status']))->latest()->paginate(
+        return Model::where(array_filter($request->only(['name', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -26,7 +26,7 @@ class VehicleSafeguardController extends Controller {
                 'name', 'phone', 'status'
             ]));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
         return $this->created();
     }
@@ -38,7 +38,7 @@ class VehicleSafeguardController extends Controller {
                 'name', 'phone', 'status'
             ]));
         } catch (\Exception $e) {
-            return $this->conflict($e->getMessage());
+            return $this->conflict('已存在该数据');
         }
 
         return $this->noContent();
