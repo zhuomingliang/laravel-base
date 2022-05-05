@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\GuestInformation;
+use App\Models\HomeDecorationExpo;
+
 use App\Imports\GuestInformationImport as Import;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -20,12 +22,18 @@ class GuestInformationController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            GuestInformation::insert($request->only([
+            $data = $request->only([
                 'full_name', 'phone', 'from'
-            ]));
-        } catch (\Exception $e) {
-            return $this->conflict('已存在该数据');
+            ]);
 
+            $data['home_decoration_expo_id'] = HomeDecorationExpo::getCurrentId();
+
+            if ($data['home_decoration_expo_id'] === null) {
+                return $this->conflict('家博会未设置为启用状态');
+            }
+
+            GuestInformation::insert($data);
+        } catch (\Exception $e) {
             return $this->conflict('已存在该嘉宾');
         }
 
@@ -36,7 +44,7 @@ class GuestInformationController extends Controller {
     public function PostImport(Request $request) {
         //导入方法
         try {
-            Excel::import(new Import,request()->file('file'));
+            Excel::import(new Import, request()->file('file'));
         } catch (\Exception $e) {
             return $this->conflict('已存在该数据');
         }

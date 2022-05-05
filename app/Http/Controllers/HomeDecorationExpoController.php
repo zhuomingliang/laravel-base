@@ -17,7 +17,7 @@ class HomeDecorationExpoController extends Controller {
 
 
     public function getCurrent() {
-        return HomeDecorationExpo::where('status', true)->first();
+        return HomeDecorationExpo::where('status', true)->OrderBy('id', 'desc')->first();
     }
 
     //新增

@@ -22,4 +22,8 @@ class HomeDecorationExpo extends Model {
     protected function serializeDate(\DateTimeInterface $date) {
         return (string) $date;
     }
+
+    public static function getCurrentId() {
+        return self::where('status', true)->OrderBy('id', 'desc')->value('id');
+    }
 }
