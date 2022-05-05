@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RideArrangements;
+use App\Models\HomeDecorationExpo;
+
 use App\Imports\RideArrangementsImport as Import;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -25,7 +27,11 @@ class RideArrangementsController extends Controller {
                 'driver_phone', 'commentator', 'commentator_phone', 'attendants', 'attendants_phone', 'status'
             ]);
 
-            $data['home_decoration_expo_id'] = 1;
+            $data['home_decoration_expo_id'] = HomeDecorationExpo::getCurrentId();
+
+            if ($data['home_decoration_expo_id'] === null) {
+                return $this->conflict('家博会未设置为启用状态');
+            }
 
             RideArrangements::insert($data);
         } catch (\Exception $e) {
@@ -38,7 +44,7 @@ class RideArrangementsController extends Controller {
     //导入
     public function PostImport() {
         try {
-            Excel::import(new Import,request()->file('file'));
+            Excel::import(new Import, request()->file('file'));
         } catch (\Exception $e) {
             return $this->conflict('已存在该数据');
         }

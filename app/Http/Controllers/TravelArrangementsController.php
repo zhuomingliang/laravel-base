@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TravelArrangements;
+use App\Models\HomeDecorationExpo;
 
 class TravelArrangementsController extends Controller {
     //获取
@@ -22,7 +23,11 @@ class TravelArrangementsController extends Controller {
                 'home_decoration_expo_id', 'date', 'scheduling'
             ]);
 
-            $data['home_decoration_expo_id'] = 1;
+            $data['home_decoration_expo_id'] = HomeDecorationExpo::getCurrentId();
+
+            if ($data['home_decoration_expo_id'] === null) {
+                return $this->conflict('家博会未设置为启用状态');
+            }
             $data['scheduling'] = json_encode($data['scheduling']);
 
             TravelArrangements::insert($data);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AccommodationArrangements;
+use App\Models\HomeDecorationExpo;
 
 class AccommodationArrangementsController extends Controller {
     //获取
@@ -23,7 +24,11 @@ class AccommodationArrangementsController extends Controller {
                 'contact_telephone', 'status'
             ]);
 
-            $data['home_decoration_expo_id'] = 1;
+            $data['home_decoration_expo_id'] = HomeDecorationExpo::getCurrentId();
+
+            if ($data['home_decoration_expo_id'] === null) {
+                return $this->conflict('家博会未设置为启用状态');
+            }
             $data['storey_info'] = json_encode($data['storey_info']);
             AccommodationArrangements::insert($data);
         } catch (\Exception $e) {

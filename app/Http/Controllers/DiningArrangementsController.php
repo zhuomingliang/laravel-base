@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DiningArrangements;
+use App\Models\HomeDecorationExpo;
+
 use App\Imports\DiningArrangementsImport as Import;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -25,7 +27,11 @@ class DiningArrangementsController extends Controller {
                 'lunch_place', 'lunch_picture', 'dinner_place', 'dinner_picture', 'status'
             ]);
 
-            $data['home_decoration_expo_id'] = 1;
+            $data['home_decoration_expo_id'] = HomeDecorationExpo::getCurrentId();
+
+            if ($data['home_decoration_expo_id'] === null) {
+                return $this->conflict('家博会未设置为启用状态');
+            }
             $data['breakfast_picture'] = $data['breakfast_picture'][0];
             $data['lunch_picture'] = $data['lunch_picture'][0];
             $data['dinner_picture'] = $data['dinner_picture'][0];
@@ -33,7 +39,6 @@ class DiningArrangementsController extends Controller {
             DiningArrangements::insert($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该数据');
-            return $this->conflict('已存在该地点');
         }
 
         return $this->created();
@@ -42,7 +47,7 @@ class DiningArrangementsController extends Controller {
     //导入
     public function PostImport() {
         try {
-            Excel::import(new Import,request()->file('file'));
+            Excel::import(new Import, request()->file('file'));
         } catch (\Exception $e) {
             return $this->conflict('已存在该数据');
         }
