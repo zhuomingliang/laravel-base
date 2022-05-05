@@ -11,6 +11,7 @@ class MedicalSecurity extends Model {
     use SoftDeletes;
 
     protected $table = 'medical_security';
+    protected $guarded = [];
 
     /**
      * Prepare a date for array / JSON serialization.

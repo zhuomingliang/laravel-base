@@ -26,6 +26,7 @@ class HomeDecorationExpoController extends Controller {
 
             HomeDecorationExpo::insert($data);
         } catch (\Exception $e) {
+            return $this->conflict($e->getMessage());
             return $this->conflict('该家博会标题已存在，或者时间与另一个家博会时间重复');
         }
 
@@ -63,10 +64,19 @@ class HomeDecorationExpoController extends Controller {
 
     //修改状态
     public function PutStatus(Request $request) {
-        $model = HomeDecorationExpo::findOrFail((int) $request->get('id'));
+        $homeDecorationExpo = HomeDecorationExpo::findOrFail((int) $request->get('id'));
 
         try {
-            $model->update($request->only(['status']));
+            \DB::beginTransaction();
+
+            $data = $request->only(['status']);
+
+            if ($data['status'] === true) {
+                HomeDecorationExpo::where('id', '>', 0)->update(['status' => false]);
+            }
+            $homeDecorationExpo->update($request->only(['status']));
+
+            \DB::commit();
         } catch (\Exception $e) {
         }
 

@@ -11,6 +11,8 @@ class HomeDecorationExpo extends Model {
     use SoftDeletes;
 
     protected $table = 'home_decoration_expo';
+    protected $guarded = [];
+
     /**
      * Prepare a date for array / JSON serialization.
      *

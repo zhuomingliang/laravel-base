@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TravelArrangements extends Model {
     use HasFactory;
     use SoftDeletes;
+    protected $guarded = [];
 
 
     /**
