@@ -15,6 +15,11 @@ class HomeDecorationExpoController extends Controller {
         );
     }
 
+
+    public function getCurrent() {
+        return HomeDecorationExpo::where('status', true)->first();
+    }
+
     //新增
     public function PostIndex(Request $request) {
         try {
