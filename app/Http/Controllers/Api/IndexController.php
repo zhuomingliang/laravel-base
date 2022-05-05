@@ -141,15 +141,19 @@ class IndexController extends Controller{
         $count = TravelArrangements::where($where)->count();
         $taList = TravelArrangements::select(['id','home_decoration_expo_id',
             'date','scheduling','status', 'created_at'
-        ])->where($where)->forPage($currpage, $limit)->get();
-
+        ])->where($where)->forPage($currpage, $limit)->get()->toArray();
+        foreach ($taList as $k => $v )
+        {
+            $taList[$k]['scheduling'] = json_decode($v['scheduling'],true);
+        }
+        //var_dump($taList);exit;
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-25','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-26','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-27','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-28','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-29','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
         //INSERT INTO travel_arrangements (home_decoration_expo_id,date,scheduling) VALUES (1,'2022-04-30','{ "09:00": "嘉宾到场签到","10:00": "第一次演讲","11:00": "第二次演讲","14:00": "第三次演讲","15:00": "第四次演讲"}');
-        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
     }
 
     //演讲活动
@@ -203,7 +207,7 @@ class IndexController extends Controller{
         //INSERT INTO advertising_video (title,video) VALUES('视频4','视频文件');
         //INSERT INTO advertising_video (title,video) VALUES('视频5','视频文件');
         //INSERT INTO advertising_video (title,video) VALUES('视频6','视频文件');
-
+        //INSERT INTO advertising_video (title,video) VALUES('视频6','http://cf.jxbashen.com/video/abc.mp4');
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
 
@@ -258,7 +262,7 @@ class IndexController extends Controller{
     //防疫须知列表
     public function epidemicPreventionInstructions(Request $request)
     {
-        $currpage = (int)$request->post('currpage',1);
+        /*$currpage = (int)$request->post('currpage',1);
         $limit = (int)$request->post('limit', 10);
         $id = $request->post('id');
         $where = [];
@@ -274,7 +278,9 @@ class IndexController extends Controller{
         //INSERT INTO epidemic_prevention_instructions (content) VALUES('航空时刻表2022年XXXX航班时刻表');
         //INSERT INTO epidemic_prevention_instructions (content) VALUES('列车时刻表2022年XXXX列车时刻表');
 
-        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];*/
+        $data = EpidemicPreventionInstructions::orderBy('id','desc')->first();
+        return ['msg'=>'成功','data'=>$data->toArray()];
     }
 
     //本地信息(简介)
@@ -292,7 +298,6 @@ class IndexController extends Controller{
         $count = LocalInformation::where($where)->count();
         $taList = LocalInformation::select(['id','title','description','pictures','status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get();
-
         //INSERT INTO epidemic_prevention_instructions (content) VALUES('航空时刻表2022年XXXX航班时刻表');
         //INSERT INTO epidemic_prevention_instructions (content) VALUES('列车时刻表2022年XXXX列车时刻表');
 
@@ -340,13 +345,16 @@ class IndexController extends Controller{
         $count = AccommodationArrangements::where($where)->count();
         $taList = AccommodationArrangements::select(['id','home_decoration_expo_id','hotel',
             'storey_info','contacts','contact_telephone','status','created_at'
-        ])->where($where)->forPage($currpage, $limit)->get();
-
+        ])->where($where)->forPage($currpage, $limit)->get()->toArray();
+        foreach ($taList as $k => $v )
+        {
+            $taList[$k]['storey_info'] = json_decode($v['storey_info'],true);
+        }
         //INSERT INTO accommodation_arrangements (home_decoration_expo_id,hotel,storey_info,contacts,contact_telephone) VALUES(1,'南康大酒店','{ "房号首位数": "1","对应楼号/层": "1","房态图": "第二次演讲"}','张三上','18574875159');
         //INSERT INTO accommodation_arrangements (home_decoration_expo_id,hotel,storey_info,contacts,contact_telephone) VALUES(1,'南康大酒店1','{ "房号首位数": "2","对应楼号/层": "2","房态图": "第二次演讲"}','张三','18574875151');
 
 
-        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
     }
 
     //车辆保障
