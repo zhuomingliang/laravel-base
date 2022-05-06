@@ -120,7 +120,7 @@ class IndexController extends Controller{
     }
 
     //最新家博会信息
-    public function expo(){
+    public function expo(Request $request){
         //INSERT INTO home_decoration_expo (title,description,daterange) VALUES ('第八届家博会','家博会简介内容',$$['2023-04-01 07:00:00', '2023-06-01 08:00:00']$$);
         $data = array();
         $id = HomeDecorationExpo::getCurrentId();
@@ -130,7 +130,11 @@ class IndexController extends Controller{
             if(strpos($str[1],')') !== false){
                 $time = str_replace(')','',$str[1]);
                 $str[1] = date('Y-m-d',strtotime($time)-86400);
+
             }
+            $domain = $request->root();
+            $replace = 'src="'.$domain.'/images/';
+            $data['description'] = str_replace('src="images/',$replace,$data['description']);
             $data['daterange'] = str_replace('[','',$str[0]).' ~  '.$str[1];
         }
         return ['msg'=>'成功','data'=>$data];
@@ -286,12 +290,15 @@ class IndexController extends Controller{
         $count = TrafficInformation::where($where)->count();
         $taList = TrafficInformation::select(['id','type',
             'title','pictures', 'status','created_at'
-        ])->where($where)->forPage($currpage, $limit)->get();
-
+        ])->where($where)->forPage($currpage, $limit)->get()->toArray();
+        foreach ($taList as $k => $v )
+        {
+            $taList[$k]['pictures'] = explode(',',rtrim(ltrim($v['pictures'],'{'),'}'));
+        }
         //INSERT INTO traffic_information (type,title) VALUES('航空时刻表','2022年XXXX航班时刻表');
         //INSERT INTO traffic_information (type,title) VALUES('列车时刻表','2022年XXXX列车时刻表');
 
-        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
     }
 
     //防疫须知列表
@@ -314,8 +321,11 @@ class IndexController extends Controller{
         //INSERT INTO epidemic_prevention_instructions (content) VALUES('列车时刻表2022年XXXX列车时刻表');
 
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];*/
-        $data = EpidemicPreventionInstructions::orderBy('id','desc')->first();
-        return ['msg'=>'成功','data'=>$data->toArray()];
+        $data = EpidemicPreventionInstructions::orderBy('id','desc')->first()->toArray();
+        $domain = $request->root();
+        $replace = 'src="'.$domain.'/images/';
+        $data['content'] = str_replace('src="images/',$replace,$data['content']);
+        return ['msg'=>'成功','data'=>$data];
     }
 
     //本地信息(简介)
