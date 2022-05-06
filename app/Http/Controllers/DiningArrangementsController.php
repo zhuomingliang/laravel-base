@@ -32,9 +32,18 @@ class DiningArrangementsController extends Controller {
             if ($data['home_decoration_expo_id'] === null) {
                 return $this->conflict('家博会未设置为启用状态');
             }
-            $data['breakfast_picture'] = $data['breakfast_picture'][0];
-            $data['lunch_picture'] = $data['lunch_picture'][0];
-            $data['dinner_picture'] = $data['dinner_picture'][0];
+
+            if (isset($data['breakfast_picture'][0])) {
+                $data['breakfast_picture'] = $data['breakfast_picture'][0];
+            }
+
+            if (isset($data['lunch_picture'][0])) {
+                $data['lunch_picture'] = $data['lunch_picture'][0];
+            }
+            if (isset($data['dinner_picture'][0])) {
+                $data['dinner_picture'] = $data['dinner_picture'][0];
+            }
+
 
             DiningArrangements::insert($data);
         } catch (\Exception $e) {
@@ -57,10 +66,23 @@ class DiningArrangementsController extends Controller {
     //修改
     public function PutIndex(Request $request) {
         try {
-            DiningArrangements::where('id', (int)$request->get('id', 0))->update($request->only([
-                'home_decoration_expo_id', 'date', 'breakfast_place', 'breakfast_picture',
+            $data = $request->only([
+                'date', 'breakfast_place', 'breakfast_picture',
                 'lunch_place', 'lunch_picture', 'dinner_place', 'dinner_picture', 'status'
-            ]));
+            ]);
+
+            if (isset($data['breakfast_picture'][0])) {
+                $data['breakfast_picture'] = $data['breakfast_picture'][0];
+            }
+
+            if (isset($data['lunch_picture'][0])) {
+                $data['lunch_picture'] = $data['lunch_picture'][0];
+            }
+            if (isset($data['dinner_picture'][0])) {
+                $data['dinner_picture'] = $data['dinner_picture'][0];
+            }
+
+            DiningArrangements::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict('已存在该地点');
         }
