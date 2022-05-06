@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class GuestInformationController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return GuestInformation::where($request->only(['full_name', 'phone']))->latest()->paginate(
+        return GuestInformation::where(array_filter($request->only(['full_name', 'phone'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
