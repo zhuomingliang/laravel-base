@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
+use Hash;
 
 class UserController extends Controller {
 
@@ -50,5 +51,22 @@ class UserController extends Controller {
         }
 
         return $query->first() ? $this->conflict('用户已存在') : $this->noContent();
+    }
+
+    public function postChangePassword(Request $request) {
+        if (!(Hash::check($request->get('current-password'), Auth::user()->password))) {
+            // The passwords matches
+            return $this->forbidden('当前密码错误');
+        }
+        if (strcmp($request->get('current-password'), $request->get('new-password')) == 0) {
+            // Current password and new password same
+            return $this->forbidden('当前密码不能与新密码相同错误');
+        }
+
+        //Change Password
+        $user = Auth::user();
+        $user->password = bcrypt($request->get('new-password'));
+        $user->save();
+        return $this->noContent();
     }
 }

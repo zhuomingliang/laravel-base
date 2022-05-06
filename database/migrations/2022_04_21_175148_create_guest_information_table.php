@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('full_name')->comment('姓名');
             $table->string('phone')->comment('手机号');
             $table->string('from')->comment('添加渠道');
-            $table->string('uniq_no')->comment('唯一标识');
+            $table->string('uniq_no')->nullable()->comment('唯一标识');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
