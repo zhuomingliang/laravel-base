@@ -19,10 +19,35 @@ use App\Models\RideArrangements;
 use App\Models\AccommodationArrangements;
 use App\Models\VehicleSafeguard;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 class IndexController extends Controller{
 
     public function index(){
-       return true;
+        return true;
+    }
+
+    //获取天气
+    public function wheathInfo(){
+        $wheathInfo = Cache::get('wheathInfo');
+        $date = '';
+        if(!empty($wheathInfo))$date = $wheathInfo['date'];//缓存时间
+        $atdate = date('Ymd',time());//当前时间
+        if(empty($wheathInfo) || $date != $atdate){
+            header("Content-Type: text/html; charset=UTF-8");
+            $URls = "http://t.weather.sojson.com/api/weather/city/101240704";
+            $header[]="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36";
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_POST, 0);
+            curl_setopt($curl, CURLOPT_URL, $URls);
+            $rs = curl_exec($curl);
+            $wheath = json_decode($rs,true);
+            Cache::put('wheathInfo',$wheath,14400);
+            return ['msg'=>'成功。','data'=>$wheath];
+        }else{
+            return ['msg'=>'成功！','data'=>$wheathInfo];
+        }
     }
 
     //嘉宾签到
@@ -97,9 +122,18 @@ class IndexController extends Controller{
     //最新家博会信息
     public function expo(){
         //INSERT INTO home_decoration_expo (title,description,daterange) VALUES ('第八届家博会','家博会简介内容',$$['2023-04-01 07:00:00', '2023-06-01 08:00:00']$$);
-        //$data = HomeDecorationExpo::orderBy('id','desc')->first();
-        $data = HomeDecorationExpo::getCurrentId();
-        return ['msg'=>'成功','data'=>$data->toArray()];
+        $data = array();
+        $id = HomeDecorationExpo::getCurrentId();
+        if(!empty($id)){
+            $data = HomeDecorationExpo::where('id','=',$id)->first()->toArray();
+            $str = explode(',',$data['daterange']);
+            if(strpos($str[1],')') !== false){
+                $time = str_replace(')','',$str[1]);
+                $str[1] = date('Y-m-d',strtotime($time)-86400);
+            }
+            $data['daterange'] = str_replace('[','',$str[0]).' ~  '.$str[1];
+        }
+        return ['msg'=>'成功','data'=>$data];
     }
 
     //用餐安排
@@ -172,7 +206,7 @@ class IndexController extends Controller{
 
         $count = SpeechActivities::where($where)->count();
         $taList = SpeechActivities::select(['id','home_decoration_expo_id',
-            'title','date','time_start','time_end','place','host','guest','status','created_at'
+            'title','date','start_time','end_time','place','host','guest','status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get();
 
         //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题1','2022-04-25','09:00','11:00','家具小镇','李四一','王五一');
@@ -225,7 +259,7 @@ class IndexController extends Controller{
         }
 
         $count = HotelInformation::where($where)->count();
-        $taList = HotelInformation::select(['id','name',
+        $taList = HotelInformation::select(['id','hotel',
             'address','telephone','wifi_password','breakfast_information','video',
             'liaison','liaison_phone','director','director_phone',
             'status','created_at'
@@ -379,6 +413,12 @@ class IndexController extends Controller{
 
 
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+    }
+
+    //PDF文件
+    public function fileInformation()
+    {
+        return true;
     }
 
 }

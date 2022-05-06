@@ -47,6 +47,7 @@ Route::post('/sanctum/token', function (Request $request) {
 
 Route::group(['namespace'=>'App\Http\Controllers\Api'], function () {
     Route::any('index', 'IndexController@index');
+    Route::any('wheathInfo', 'IndexController@wheathInfo');//天气预报
     Route::any('sign', 'IndexController@sign');//嘉宾签到
     Route::any('isSign', 'IndexController@isSign');//嘉宾是否签到
     Route::any('expo', 'IndexController@expo');//最新家博会信息
