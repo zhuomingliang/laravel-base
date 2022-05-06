@@ -54,18 +54,15 @@ class UserController extends Controller {
     }
 
     public function postChangePassword(Request $request) {
-        if (!(Hash::check($request->get('current-password'), Auth::user()->password))) {
-            // The passwords matches
-            return $this->forbidden('当前密码错误');
+        if (!(Hash::check($request->get('oldPassword'), Auth::user()->password))) {
+            return $this->conflict('当前密码错误');
         }
-        if (strcmp($request->get('current-password'), $request->get('new-password')) == 0) {
-            // Current password and new password same
-            return $this->forbidden('当前密码不能与新密码相同错误');
+        if (strcmp($request->get('oldPassword'), $request->get('newPassword')) == 0) {
+            return $this->conflict('当前密码不能与新密码相同错误');
         }
 
-        //Change Password
         $user = Auth::user();
-        $user->password = bcrypt($request->get('new-password'));
+        $user->password = bcrypt($request->get('newPassword'));
         $user->save();
         return $this->noContent();
     }

@@ -9,7 +9,7 @@ use App\Models\HomeDecorationExpo;
 class TravelArrangementsController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return TravelArrangements::where($request->only(['date', 'status']))->latest()->paginate(
+        return TravelArrangements::where(array_filter($request->only(['date', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'

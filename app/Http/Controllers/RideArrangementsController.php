@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class RideArrangementsController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return RideArrangements::where(array_filter($request->only(['date', 'status'])))->latest()->paginate(
+        return RideArrangements::where(array_filter($request->only(['auto_no', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'

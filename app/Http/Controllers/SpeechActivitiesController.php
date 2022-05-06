@@ -16,7 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class SpeechActivitiesController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return SpeechActivities::where($request->only(['date', 'status']))->latest()->paginate(
+        return SpeechActivities::where(array_filter($request->only(['date', 'title', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -49,7 +49,7 @@ class SpeechActivitiesController extends Controller {
     public function PutIndex(Request $request) {
         try {
             $data = $request->only([
-                'title', 'date', 'time_start', 'time_end', 'place',
+                'title', 'date', 'start_time', 'end_time', 'place',
                 'host', 'guest', 'status'
             ]);
 
