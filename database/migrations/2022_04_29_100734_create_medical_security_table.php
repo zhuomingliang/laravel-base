@@ -13,7 +13,8 @@ return new class extends Migration {
     public function up() {
         Schema::create('medical_security', function (Blueprint $table) {
             $table->id();
-            $table->date('date')->unique()->comment('日期');
+            $table->bigInteger('hotel_information_id')->comment('酒店信息 ID');
+            $table->date('date')->comment('日期');
             $table->string('doctor')->nullable()->comment('保障医师');
             $table->string('doctor_phone')->nullable()->comment('保障医师电话');
             $table->string('doctor_address')->nullable()->comment('保障医师住宿酒店');
@@ -26,6 +27,8 @@ return new class extends Migration {
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
+
+            $table->unique(['hotel_information_id', 'date']);
         });
     }
 
