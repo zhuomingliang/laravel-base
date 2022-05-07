@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\VehicleSafeguard as Model;
+use App\Models\VehicleSafeguard;
 use Illuminate\Http\Request;
 
 /*
@@ -12,7 +12,15 @@ use Illuminate\Http\Request;
 class VehicleSafeguardController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return Model::where(array_filter($request->only(['name', 'status'])))->latest()->paginate(
+        $where = array_filter($request->only(['name']));
+
+        $query = VehicleSafeguard::query();
+
+        if (!empty($where)) {
+            $query->where('name', '~', $where['name']);
+        }
+
+        return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
@@ -22,7 +30,7 @@ class VehicleSafeguardController extends Controller {
     //新增
     public function PostIndex(Request $request) {
         try {
-            Model::insert($request->only([
+            VehicleSafeguard::insert($request->only([
                 'name', 'phone', 'status'
             ]));
         } catch (\Exception $e) {
@@ -34,7 +42,7 @@ class VehicleSafeguardController extends Controller {
     //修改
     public function PutIndex(Request $request) {
         try {
-            Model::where('id', (int)$request->get('id', 0))->update($request->only([
+            VehicleSafeguard::where('id', (int)$request->get('id', 0))->update($request->only([
                 'name', 'phone', 'status'
             ]));
         } catch (\Exception $e) {
@@ -47,7 +55,7 @@ class VehicleSafeguardController extends Controller {
     //删除
     public function DeleteIndex(Request $request) {
         try {
-            if (Model::where('id', (int)$request->get('id', 0))->delete()) {
+            if (VehicleSafeguard::where('id', (int)$request->get('id', 0))->delete()) {
                 return $this->noContent();
             }
         } catch (\Exception $e) {
@@ -58,7 +66,7 @@ class VehicleSafeguardController extends Controller {
 
     //修改状态
     public function PutStatus(Request $request) {
-        $model = Model::findOrFail((int) $request->get('id'));
+        $model = VehicleSafeguard::findOrFail((int) $request->get('id'));
 
         try {
             $model->update($request->only(['status']));

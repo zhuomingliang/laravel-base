@@ -12,7 +12,15 @@ use App\Models\FileInformation;
 class FileInformationController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return FileInformation::where(array_filter($request->only(['file_name', 'status'])))->latest()->paginate(
+        $where = array_filter($request->only(['file_name']));
+
+        $query = FileInformation::query();
+
+        if (!empty($where)) {
+            $query->where('file_name', '~', $where['file_name']);
+        }
+
+        return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'

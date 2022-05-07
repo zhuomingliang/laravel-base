@@ -16,6 +16,7 @@ class AccommodationArrangementsController extends Controller {
         if (!empty($where)) {
             $query->where('hotel', '~', $where['hotel']);
         }
+
         return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],

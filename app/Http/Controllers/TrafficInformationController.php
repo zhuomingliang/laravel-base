@@ -11,7 +11,15 @@ use App\Models\TrafficInformation;
 class TrafficInformationController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return TrafficInformation::where(array_filter($request->only(['type', 'status'])))->latest()->paginate(
+        $where = array_filter($request->only(['type']));
+
+        $query = TrafficInformation::query();
+
+        if (!empty($where)) {
+            $query->where('type', '~', $where['type']);
+        }
+
+        return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'

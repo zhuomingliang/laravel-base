@@ -16,7 +16,15 @@ use Maatwebsite\Excel\Facades\Excel;
 class SpeechActivitiesController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return SpeechActivities::where(array_filter($request->only(['date', 'title', 'status'])))->latest()->paginate(
+        $where = array_filter($request->only(['title']));
+
+        $query = SpeechActivities::query();
+
+        if (!empty($where)) {
+            $query->where('title', '~', $where['title']);
+        }
+
+        return $query->where(array_filter($request->only(['date', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
