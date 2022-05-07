@@ -18,6 +18,7 @@ use App\Models\LocalInformation;
 use App\Models\RideArrangements;
 use App\Models\AccommodationArrangements;
 use App\Models\VehicleSafeguard;
+use App\Models\FileInformation;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 class IndexController extends Controller{
@@ -147,20 +148,19 @@ class IndexController extends Controller{
         $limit = (int)$request->get('limit', 10);
         $expo_id = $request->get('expo_id',1);
         if(empty($expo_id))return $this->conflict('家博会ID不能为空');
-        $where = [];
+        $where[] = ['status','=',true];
         if(!empty($expo_id))
         {
             $where[] = ['home_decoration_expo_id','=',$expo_id];
         }
 
         $count = DiningArrangements::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $daList = DiningArrangements::select(['id','home_decoration_expo_id','date','breakfast_place','breakfast_picture', 'lunch_place','lunch_picture','dinner_place','dinner_picture','status','created_at'])->where($where)->forPage($currpage, $limit)->get();
 
-        //INSERT INTO dining_arrangements (home_decoration_expo_id,date,breakfast_place,breakfast_picture,lunch_place,lunch_picture,dinner_place,dinner_picture) VALUES (1,'2022-04-24','南康大酒店','','南康大酒店','','南康大酒店','');
-        //INSERT INTO dining_arrangements (home_decoration_expo_id,date,breakfast_place,breakfast_picture,lunch_place,lunch_picture,dinner_place,dinner_picture) VALUES (1,'2022-04-25','宝辉酒店','','宝辉酒店','','宝辉酒店','');
-        //INSERT INTO dining_arrangements (home_decoration_expo_id,date,breakfast_place,breakfast_picture,lunch_place,lunch_picture,dinner_place,dinner_picture) VALUES (1,'2022-04-26','城市客厅','','城市客厅','','城市客厅','');
-        //INSERT INTO dining_arrangements (home_decoration_expo_id,date,breakfast_place,breakfast_picture,lunch_place,lunch_picture,dinner_place,dinner_picture) VALUES (1,'2022-04-27','皇厨酒店','','皇厨酒店','','皇厨酒店','');
-        return ['msg'=>'成功','count'=>$count, 'data'=>$daList->toArray()];
+       return ['msg'=>'成功','count'=>$count, 'data'=>$daList->toArray()];
 
     }
 
@@ -171,13 +171,16 @@ class IndexController extends Controller{
         $limit = (int)$request->get('limit', 10);
         $expo_id = $request->get('expo_id',1);
         if(empty($expo_id))return $this->conflict('家博会ID不能为空');
-        $where = [];
+        $where[] = ['status','=',true];
         if(!empty($expo_id))
         {
             $where[] = ['home_decoration_expo_id','=',$expo_id];
         }
 
         $count = TravelArrangements::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = TravelArrangements::select(['id','home_decoration_expo_id',
             'date','scheduling','status', 'created_at'
         ])->where($where)->forPage($currpage, $limit)->get()->toArray();
@@ -202,24 +205,19 @@ class IndexController extends Controller{
         $limit = (int)$request->get('limit', 10);
         $expo_id = $request->get('expo_id',1);
         if(empty($expo_id))return $this->conflict('家博会ID不能为空');
-        $where = [];
+        $where[] = ['status','=',true];
         if(!empty($expo_id))
         {
             $where[] = ['home_decoration_expo_id','=',$expo_id];
         }
 
         $count = SpeechActivities::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = SpeechActivities::select(['id','home_decoration_expo_id',
             'title','date','start_time','end_time','place','host','guest','status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get();
-
-        //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题1','2022-04-25','09:00','11:00','家具小镇','李四一','王五一');
-        //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题2','2022-04-26','09:00','11:00','家具小镇','李四二','王五二');
-        //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题3','2022-04-27','09:00','11:00','家具小镇','李四三','王五三');
-        //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题4','2022-04-28','09:00','11:00','家具小镇','李四四','王五四');
-        //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题5','2022-04-29','09:00','11:00','家具小镇','李四五','王五五');
-        //INSERT INTO speech_activities (home_decoration_expo_id,title,date,time_start,time_end,place,host,guest) VALUES(1,'主题6','2022-04-30','09:00','11:00','家具小镇','李四六','王五六');
-
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
 
@@ -229,24 +227,20 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $id = $request->get('id');
-        $where = [];
+        $where[] = ['status','=',true];
         if(!empty($id))
         {
             $where[] = ['id','=',$id];
         }
 
         $count = AdvertisingVideo::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = AdvertisingVideo::select(['id','title',
             'video','sort','status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get();
 
-        //INSERT INTO advertising_video (title,video) VALUES('视频1','视频文件');
-        //INSERT INTO advertising_video (title,video) VALUES('视频2','视频文件');
-        //INSERT INTO advertising_video (title,video) VALUES('视频3','视频文件');
-        //INSERT INTO advertising_video (title,video) VALUES('视频4','视频文件');
-        //INSERT INTO advertising_video (title,video) VALUES('视频5','视频文件');
-        //INSERT INTO advertising_video (title,video) VALUES('视频6','视频文件');
-        //INSERT INTO advertising_video (title,video) VALUES('视频6','http://cf.jxbashen.com/video/abc.mp4');
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
 
@@ -256,13 +250,16 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $id = $request->get('id');
-        $where = [];
+        $where[] = ['status','=',true];
         if(!empty($id))
         {
             $where[] = ['id','=',$id];
         }
 
         $count = HotelInformation::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = HotelInformation::select(['id','hotel',
             'address','telephone','wifi_password','breakfast_information','video',
             'liaison','liaison_phone','director','director_phone',
@@ -281,13 +278,16 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $id = $request->get('id');
-        $where = [];
+        $where[] = ['status','=',true];
         if(!empty($id))
         {
             $where[] = ['id','=',$id];
         }
 
         $count = TrafficInformation::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = TrafficInformation::select(['id','type',
             'title','pictures', 'status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get()->toArray();
@@ -304,28 +304,16 @@ class IndexController extends Controller{
     //防疫须知列表
     public function epidemicPreventionInstructions(Request $request)
     {
-        /*$currpage = (int)$request->post('currpage',1);
-        $limit = (int)$request->post('limit', 10);
-        $id = $request->post('id');
-        $where = [];
-        if(!empty($id))
-        {
-            $where[] = ['id','=',$id];
+        $where[] = ['status','=',true];
+        $data = EpidemicPreventionInstructions::where($where)->orderBy('id','desc')->first();
+        if(!empty($data)){
+            $data = $data->toArray();
+            $domain = $request->root();
+            $replace = 'src="'.$domain.'/images/';
+            $data['content'] = str_replace('src="images/',$replace,$data['content']);
+            return ['msg'=>'成功','data'=>$data];
         }
-
-        $count = EpidemicPreventionInstructions::where($where)->count();
-        $taList = EpidemicPreventionInstructions::select(['id','content'
-        ])->where($where)->forPage($currpage, $limit)->get();
-
-        //INSERT INTO epidemic_prevention_instructions (content) VALUES('航空时刻表2022年XXXX航班时刻表');
-        //INSERT INTO epidemic_prevention_instructions (content) VALUES('列车时刻表2022年XXXX列车时刻表');
-
-        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];*/
-        $data = EpidemicPreventionInstructions::orderBy('id','desc')->first()->toArray();
-        $domain = $request->root();
-        $replace = 'src="'.$domain.'/images/';
-        $data['content'] = str_replace('src="images/',$replace,$data['content']);
-        return ['msg'=>'成功','data'=>$data];
+        return ['msg'=>'成功','data'=>array()];
     }
 
     //本地信息(简介)
@@ -334,19 +322,25 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $id = $request->get('id');
-        $where = [];
+        $where[] = ['status','=',true];
         if(!empty($id))
         {
             $where[] = ['id','=',$id];
         }
 
         $count = LocalInformation::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = LocalInformation::select(['id','title','description','pictures','status','created_at'
-        ])->where($where)->forPage($currpage, $limit)->get();
+        ])->where($where)->forPage($currpage, $limit)->get()->toArray();
         //INSERT INTO epidemic_prevention_instructions (content) VALUES('航空时刻表2022年XXXX航班时刻表');
         //INSERT INTO epidemic_prevention_instructions (content) VALUES('列车时刻表2022年XXXX列车时刻表');
-
-        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+        foreach ($taList as $k => $v )
+        {
+            $taList[$k]['pictures'] = explode(',',rtrim(ltrim($v['pictures'],'{'),'}'));
+        }
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
     }
 
     //乘车安排列表
@@ -355,13 +349,16 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $id = $request->get('id');
-        $where = [];
+        $where[] = ['status','=',true];
         if(!empty($id))
         {
             $where[] = ['id','=',$id];
         }
 
         $count = RideArrangements::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = RideArrangements::select(['id','home_decoration_expo_id','auto_no',
             'license_plate_number','driver','driver_phone','commentator','commentator_phone',
             'attendants','attendants_phone',
@@ -381,13 +378,16 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $id = $request->get('id');
-        $where = [];
+        $where[] =['status','=',true];
         if(!empty($id))
         {
             $where[] = ['id','=',$id];
         }
 
         $count = AccommodationArrangements::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = AccommodationArrangements::select(['id','home_decoration_expo_id','hotel',
             'storey_info','contacts','contact_telephone','status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get()->toArray();
@@ -395,10 +395,6 @@ class IndexController extends Controller{
         {
             $taList[$k]['storey_info'] = json_decode($v['storey_info'],true);
         }
-        //INSERT INTO accommodation_arrangements (home_decoration_expo_id,hotel,storey_info,contacts,contact_telephone) VALUES(1,'南康大酒店','{ "房号首位数": "1","对应楼号/层": "1","房态图": "第二次演讲"}','张三上','18574875159');
-        //INSERT INTO accommodation_arrangements (home_decoration_expo_id,hotel,storey_info,contacts,contact_telephone) VALUES(1,'南康大酒店1','{ "房号首位数": "2","对应楼号/层": "2","房态图": "第二次演讲"}','张三','18574875151');
-
-
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
     }
 
@@ -408,27 +404,41 @@ class IndexController extends Controller{
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
         $id = $request->get('id');
-        $where = [];
+        $where[] =['status','=',true];
         if(!empty($id))
         {
             $where[] = ['id','=',$id];
         }
 
         $count = VehicleSafeguard::where($where)->count();
+        if($count <= 0){
+            return ['msg'=>'成功','count'=>$count, 'data'=>array()];
+        }
         $taList = VehicleSafeguard::select(['id','name','phone','status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get();
-
-        //INSERT INTO vehicle_safeguard (name,phone) VALUES('张三上','18574875159');
-        //INSERT INTO vehicle_safeguard (name,phone) VALUES('张三','18574875151');
-
 
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
 
     //PDF文件
-    public function fileInformation()
+    public function fileInformation(Request $request)
     {
-        return true;
+        $type = (int)$request->get('type',1);
+        $where[] =['status','=',true];
+        switch($type){
+            case 1;
+                $where[] =['file_name','=','食宿及乘车安排表'];
+                break;
+            case 2;
+                $where[] =['file_name','=','餐饮安排表'];
+                break;
+        }
+        $data = array();
+        $data = FileInformation::where($where)->first();
+        if(!empty($data)){
+            return ['msg'=>'成功','data'=>$data->toArray()];
+        }
+        return ['msg'=>'成功','data'=>array()];
     }
 
 }

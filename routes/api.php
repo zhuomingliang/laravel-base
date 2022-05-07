@@ -62,4 +62,5 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function () {
     Route::any('rideArrangements', 'IndexController@rideArrangements');//乘车安排列表
     Route::any('accommodationArrangements', 'IndexController@accommodationArrangements');//住宿安排列表
     Route::any('vehicleSafeguard', 'IndexController@vehicleSafeguard');//车辆保障
+    Route::any('fileInformation', 'IndexController@fileInformation');//PDF文件
 });
