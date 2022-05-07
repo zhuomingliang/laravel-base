@@ -18,6 +18,7 @@ use App\Models\LocalInformation;
 use App\Models\RideArrangements;
 use App\Models\AccommodationArrangements;
 use App\Models\VehicleSafeguard;
+use App\Models\MedicalSecurity;
 use App\Models\FileInformation;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
@@ -264,12 +265,22 @@ class IndexController extends Controller{
             'address','telephone','wifi_password','breakfast_information','video',
             'liaison','liaison_phone','director','director_phone',
             'status','created_at'
-
-        ])->where($where)->forPage($currpage, $limit)->get();
-
-        //INSERT INTO hotel_information (name,address,telephone,wifi_password,liaison,liaison_phone,director,director_phone) VALUES('南康大酒店','南康区天马山大道','0709-12345678','88888888','李四','15107970001','王五','15107970011');
-
-        return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
+        ])->where($where)->forPage($currpage, $limit)->get()->toArray();
+        foreach ($taList as $k => $v){
+            $taList[$k]['vehicle_safeguard'] =  array();
+            $taList[$k]['medical_security'] =  array();
+            //车辆保障
+            $where1[] = ['hotel_information_id','=',$v['id']];
+            $where1[] = ['status','=',true];
+            $vehicleSafeguard = VehicleSafeguard::select()->where($where1)->get();
+            if(!empty($vehicleSafeguard))$taList[$k]['vehicle_safeguard'] = $vehicleSafeguard->toArray();
+            //医疗保障
+            $where2[] = ['hotel_information_id','=',$v['id']];
+            $where2[] = ['status','=',true];
+            $sedicalSecurity = MedicalSecurity::select()->where($where2)->get();
+            if(!empty($sedicalSecurity))$taList[$k]['medical_security'] = $sedicalSecurity->toArray();
+        }
+        return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
     }
 
     //交通信息列表
@@ -295,8 +306,6 @@ class IndexController extends Controller{
         {
             $taList[$k]['pictures'] = explode(',',rtrim(ltrim($v['pictures'],'{'),'}'));
         }
-        //INSERT INTO traffic_information (type,title) VALUES('航空时刻表','2022年XXXX航班时刻表');
-        //INSERT INTO traffic_information (type,title) VALUES('列车时刻表','2022年XXXX列车时刻表');
 
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
     }
@@ -365,10 +374,6 @@ class IndexController extends Controller{
             'status','created_at'
         ])->where($where)->forPage($currpage, $limit)->get();
 
-        //INSERT INTO ride_arrangements (home_decoration_expo_id,auto_no,license_plate_number,driver,driver_phone,commentator,commentator_phone,attendants,attendants_phone) VALUES(1,'1号车','赣B125M','张三1','18574875158','张三上','18574875159','李四','18574875158');
-        //INSERT INTO ride_arrangements (home_decoration_expo_id,auto_no,license_plate_number,driver,driver_phone,commentator,commentator_phone,attendants,attendants_phone) VALUES(1,'2号车','赣B126M','张三2','18574875158','张三上','18574875159','李四','18574875158');
-
-
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
 
@@ -431,6 +436,12 @@ class IndexController extends Controller{
                 break;
             case 2;
                 $where[] =['file_name','=','餐饮安排表'];
+                break;
+            case 3;
+                $where[] =['file_name','=','住宿安排表'];
+                break;
+            case 4;
+                $where[] =['file_name','like','乘车安排'];
                 break;
         }
         $data = array();
