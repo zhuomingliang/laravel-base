@@ -13,6 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('vehicle_safeguard', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('hotel_information_id')->comment('酒店信息 ID');
             $table->string('name')->comment('姓名');
             $table->string('phone')->comment('电话号码');
             $table->boolean('status')->default(true)->comment('状态');

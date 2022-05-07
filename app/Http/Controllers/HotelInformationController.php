@@ -92,4 +92,8 @@ class HotelInformationController extends Controller {
 
         return $this->noContent();
     }
+
+    public function getAllHotels(Request $request) {
+        return HotelInformation::where('status', true)->get(['id', 'hotel']);
+    }
 }

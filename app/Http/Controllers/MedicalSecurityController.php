@@ -11,18 +11,20 @@ use App\Models\MedicalSecurity;
 class MedicalSecurityController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return MedicalSecurity::where(array_filter($request->only(['date', 'status'])))->latest()->paginate(
-            (int) $request->get('per_page'),
-            ['*'],
-            'current_page'
-        );
+        return MedicalSecurity::join('hotel_information', 'hotel_information.id', 'medical_security.hotel_information_id')
+            ->where(array_filter($request->only(['hotel_information_id', 'date', 'status'])))
+            ->latest('medical_security.created_at')->paginate(
+                (int) $request->get('per_page'),
+                ['hotel_information.hotel', 'medical_security.*'],
+                'current_page'
+            );
     }
 
     //新增
     public function PostIndex(Request $request) {
         try {
             MedicalSecurity::insert($request->only([
-                'date', 'doctor', 'doctor_phone', 'doctor_address', 'nurse', 'nurse_phone',
+                'hotel_information_id', 'date', 'doctor', 'doctor_phone', 'doctor_address', 'nurse', 'nurse_phone',
                 'nurse_address', 'nucleic_acid_testing_address', 'isolation_address', 'status'
             ]));
         } catch (\Exception $e) {
@@ -35,7 +37,7 @@ class MedicalSecurityController extends Controller {
     public function PutIndex(Request $request) {
         try {
             MedicalSecurity::where('id', (int)$request->get('id', 0))->update($request->only([
-                 'date', 'doctor', 'doctor_phone', 'doctor_address', 'nurse', 'nurse_phone',
+                'hotel_information_id', 'date', 'doctor', 'doctor_phone', 'doctor_address', 'nurse', 'nurse_phone',
                 'nurse_address', 'nucleic_acid_testing_address', 'isolation_address', 'status'
             ]));
         } catch (\Exception $e) {
