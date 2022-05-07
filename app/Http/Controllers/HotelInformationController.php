@@ -8,7 +8,15 @@ use App\Models\HotelInformation;
 class HotelInformationController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return HotelInformation::where(array_filter($request->only(['hotel', 'status'])))->latest()->paginate(
+        $where = array_filter($request->only(['hotel']));
+
+        $query = HotelInformation::query();
+
+        if (!empty($where)) {
+            $query->where('hotel', '~', $where['hotel']);
+        }
+
+        return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'

@@ -9,7 +9,15 @@ use App\Models\HomeDecorationExpo;
 class AccommodationArrangementsController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return AccommodationArrangements::where(array_filter($request->only(['hotel', 'status'])))->latest()->paginate(
+        $where = array_filter($request->only(['hotel']));
+
+        $query = AccommodationArrangements::query();
+
+        if (!empty($where)) {
+            $query->where('hotel', '~', $where['hotel']);
+        }
+
+        return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
