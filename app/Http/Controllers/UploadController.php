@@ -22,7 +22,7 @@ class UploadController extends Controller {
         set_time_limit(0);
         ini_set("max_execution_time", "1024M");
         $request->validate([
-            'file' => 'required|mimetypes:video/webm,video/mp4,video/ogg|max:2048',
+            'file' => 'required|mimetypes:video/webm,video/mp4,video/ogg|max:51200',
         ]);
 
 
@@ -35,7 +35,7 @@ class UploadController extends Controller {
         set_time_limit(0);
         ini_set("max_execution_time", "1024M");
         $request->validate([
-            'file' => 'required|file|max:2048',
+            'file' => 'required|file|max:10240',
         ]);
 
 

@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('local_information', function (Blueprint $table) {
             $table->id();
             $table->string('title')->comment('标题');
-            $table->string('description')->comment('描述');
+            $table->text('description')->nullable()->comment('描述');
             $table->text('pictures')->comment('图片');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
