@@ -313,8 +313,7 @@ class IndexController extends Controller{
     //防疫须知列表
     public function epidemicPreventionInstructions(Request $request)
     {
-        $where[] = ['status','=',true];
-        $data = EpidemicPreventionInstructions::where($where)->orderBy('id','desc')->first();
+        $data = EpidemicPreventionInstructions::orderBy('id','desc')->first();
         if(!empty($data)){
             $data = $data->toArray();
             $domain = $request->root();
