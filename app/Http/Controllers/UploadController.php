@@ -18,7 +18,7 @@ class UploadController extends Controller {
 
     public function postVideo(Request $request) {
         $request->validate([
-            'file' => 'required|mimetypes:video/webm,video/mp4,video/ogg|max:2048',
+            'file' => 'required|mimetypes:video/webm,video/mp4,video/ogg|max:51200',
         ]);
 
 
@@ -29,7 +29,7 @@ class UploadController extends Controller {
 
     public function postFile(Request $request) {
         $request->validate([
-            'file' => 'required|file|max:2048',
+            'file' => 'required|file|max:10240',
         ]);
 
 
