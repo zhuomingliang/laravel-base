@@ -60,9 +60,12 @@ class IndexController extends Controller{
         $phone = $data['phone'];
         $expo_id = (int)$data['expo_id'];
         $uniq_no = $data['uniq_no'];
+
         if(empty($user))return $this->conflict('请输入姓名');
         if(empty($phone) && strlen($phone) != 11)return $this->conflict('请输入正确的手机号码');
         if(empty($uniq_no))return $this->conflict('缺少参数uniq_no');
+        $wx = $this->getOpenid($uniq_no);
+        if(!isset($wx['openid']))return $this->conflict('缺少必要参数openid');
         $ginnfo = GuestInformation::where(['guest_information.full_name'=>$user,'guest_information.phone'=>$phone,'guest_information.home_decoration_expo_id'=>$expo_id])
             ->leftJoin('check_in','guest_information.id','=','check_in.guest_information_id')
             ->first();
@@ -74,14 +77,14 @@ class IndexController extends Controller{
                 $param = ['guest_information_id' => $ginnfo->id];
                 CheckIn::insert($param);
                 //更新小程序唯一标识
-                GuestInformation::where(['full_name' => $user, 'phone' => $phone, 'home_decoration_expo_id' => $expo_id])->update(['uniq_no' => $uniq_no]);
+                GuestInformation::where(['full_name' => $user, 'phone' => $phone, 'home_decoration_expo_id' => $expo_id])->update(['uniq_no' => $wx['openid']]);
             } else {
                 $gparam = [
                     'home_decoration_expo_id' => $expo_id,
                     'full_name' => $user,
                     'phone' => $phone,
                     'from' => 'APP',
-                    'uniq_no' => $uniq_no,
+                    'uniq_no' => $wx['openid'],
                 ];
                 $gId = GuestInformation::insertGetId($gparam, 'id');
                 //新增签到记录
@@ -101,12 +104,14 @@ class IndexController extends Controller{
     public function isSign(Request $request)
     {
         $data = $request->all();
-        $expo_id = $data['expo_id'];
+        //$expo_id = $data['expo_id'];
         $uniq_no = $data['uniq_no'];
+        $expo_id = HomeDecorationExpo::getCurrentId();
         if(empty($expo_id))return $this->conflict('缺少必要参数expo_id');
         if(empty($uniq_no))return $this->conflict('缺少必要参数uniq_no');
-
-        $ginnfo = GuestInformation::where(['guest_information.home_decoration_expo_id'=>$expo_id,'guest_information.uniq_no'=>$uniq_no])
+        $wx = $this->getOpenid($uniq_no);
+        if(!isset($wx['openid']))return $this->conflict('缺少必要参数openid');
+        $ginnfo = GuestInformation::where(['guest_information.home_decoration_expo_id'=>$expo_id,'guest_information.uniq_no'=>$wx['openid']])
             ->leftJoin('check_in','guest_information.id','=','check_in.guest_information_id')
             ->first();
         //是否签到
@@ -121,6 +126,25 @@ class IndexController extends Controller{
         }
     }
 
+    //获取小程序openid
+    public function getOpenid($uniq_no){
+
+        $curl = curl_init();
+        //设置抓取的url
+        curl_setopt($curl, CURLOPT_URL, "https://api.weixin.qq.com/sns/jscode2session?appid=wx09553058c0ec2dd4&secret=680f83e111926c82cef8b03522d3ace8&js_code=".$uniq_no."&grant_type=authorization_code");//输入自己的微信公众号APPID和secret
+        //设置头文件的信息作为数据流输出
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0); //不验证证书
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        //设置获取的信息以文件流的形式返回，而不是直接输出。
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        //执行命令
+        $wx = curl_exec($curl);
+        //关闭URL请求
+        curl_close($curl);
+        //显示获得的数据
+        $wx = json_decode($wx,true);
+        return $wx;
+    }
     //最新家博会信息
     public function expo(Request $request){
         //INSERT INTO home_decoration_expo (title,description,daterange) VALUES ('第八届家博会','家博会简介内容',$$['2023-04-01 07:00:00', '2023-06-01 08:00:00']$$);
@@ -147,7 +171,8 @@ class IndexController extends Controller{
     {
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
-        $expo_id = $request->get('expo_id',1);
+        //$expo_id = $request->get('expo_id',1);
+        $expo_id = HomeDecorationExpo::getCurrentId();
         if(empty($expo_id))return $this->conflict('家博会ID不能为空');
         $where[] = ['status','=',true];
         if(!empty($expo_id))
@@ -170,7 +195,8 @@ class IndexController extends Controller{
     {
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
-        $expo_id = $request->get('expo_id',1);
+        //$expo_id = $request->get('expo_id',1);
+        $expo_id = HomeDecorationExpo::getCurrentId();
         if(empty($expo_id))return $this->conflict('家博会ID不能为空');
         $where[] = ['status','=',true];
         if(!empty($expo_id))
@@ -184,7 +210,7 @@ class IndexController extends Controller{
         }
         $taList = TravelArrangements::select(['id','home_decoration_expo_id',
             'date','scheduling','status', 'created_at'
-        ])->where($where)->forPage($currpage, $limit)->get()->toArray();
+        ])->where($where)->forPage($currpage, $limit)->orderBy('date','asc')->get()->toArray();
         foreach ($taList as $k => $v )
         {
             $taList[$k]['scheduling'] = json_decode($v['scheduling'],true);
@@ -204,7 +230,8 @@ class IndexController extends Controller{
     {
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
-        $expo_id = $request->get('expo_id',1);
+        //$expo_id = $request->get('expo_id',1);
+        $expo_id = HomeDecorationExpo::getCurrentId();
         if(empty($expo_id))return $this->conflict('家博会ID不能为空');
         $where[] = ['status','=',true];
         if(!empty($expo_id))
@@ -218,7 +245,7 @@ class IndexController extends Controller{
         }
         $taList = SpeechActivities::select(['id','home_decoration_expo_id',
             'title','date','start_time','end_time','place','host','guest','status','created_at'
-        ])->where($where)->forPage($currpage, $limit)->get();
+        ])->where($where)->forPage($currpage, $limit)->orderBy('date','asc')->get();
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList->toArray()];
     }
 
@@ -277,7 +304,7 @@ class IndexController extends Controller{
             //医疗保障
             $where2[] = ['hotel_information_id','=',$v['id']];
             $where2[] = ['status','=',true];
-            $sedicalSecurity = MedicalSecurity::select()->where($where2)->get();
+            $sedicalSecurity = MedicalSecurity::select()->where($where2)->orderBy('date','asc')->get();
             if(!empty($sedicalSecurity))$taList[$k]['medical_security'] = $sedicalSecurity->toArray();
         }
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
