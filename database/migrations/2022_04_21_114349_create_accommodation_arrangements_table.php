@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('accommodation_arrangements', function (Blueprint $table) {
             $table->id();
             $table->integer('home_decoration_expo_id')->comment('家博会 ID');
-            $table->string('hotel')->unique()->comment('酒店名');
+            $table->string('hotel')->comment('酒店名');
             $table->jsonb('storey_info')->default('{}')->comment('楼层信息');
             $table->string('contacts')->nullable()->comment('联系人');
             $table->string('contact_telephone')->nullable()->comment('联系人电话');
@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
+
+            $table->unique(['home_decoration_expo_id', 'hotel']);
         });
 
         DB::statement("COMMENT ON TABLE dining_arrangements IS '住宿安排'");
