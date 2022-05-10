@@ -19,6 +19,8 @@ class TrafficInformationController extends Controller {
             $query->where('type', '~', $where['type']);
         }
 
+        $query->where('home_decoration_expo_id', HomeDecorationExpo::getCurrentId());
+
         return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],

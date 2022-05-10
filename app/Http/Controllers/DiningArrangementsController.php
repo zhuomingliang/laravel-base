@@ -12,11 +12,12 @@ use Maatwebsite\Excel\Facades\Excel;
 class DiningArrangementsController extends Controller {
     //获取
     public function getIndex(Request $request) {
-        return DiningArrangements::where($request->only(['date', 'status']))->latest()->paginate(
-            (int) $request->get('per_page'),
-            ['*'],
-            'current_page'
-        );
+        return DiningArrangements::where('home_decoration_expo_id', HomeDecorationExpo::getCurrentId())
+            ->where($request->only(['date', 'status']))->latest()->paginate(
+                (int) $request->get('per_page'),
+                ['*'],
+                'current_page'
+            );
     }
 
     //新增
