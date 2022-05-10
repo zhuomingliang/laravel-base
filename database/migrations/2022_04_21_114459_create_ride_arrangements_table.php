@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('ride_arrangements', function (Blueprint $table) {
             $table->id();
             $table->integer('home_decoration_expo_id')->comment('家博会 ID');
-            $table->string('auto_no')->unique()->comment('车次');
+            $table->string('auto_no')->comment('车次');
             $table->string('license_plate_number')->nullable()->comment('车牌号');
             $table->string('driver')->nullable()->comment('司机');
             $table->string('driver_phone')->nullable()->comment('司机电话号码');
@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
+
+            $table->unique(['home_decoration_expo_id', 'auto_no']);
         });
 
         DB::statement("COMMENT ON TABLE dining_arrangements IS '乘车安排'");
