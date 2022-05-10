@@ -17,6 +17,8 @@ class AccommodationArrangementsController extends Controller {
             $query->where('hotel', '~', $where['hotel']);
         }
 
+        $query->where('home_decoration_expo_id', HomeDecorationExpo::getCurrentId());
+
         return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],

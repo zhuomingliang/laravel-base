@@ -24,6 +24,8 @@ class SpeechActivitiesController extends Controller {
             $query->where('title', '~', $where['title']);
         }
 
+        $query->where('home_decoration_expo_id', HomeDecorationExpo::getCurrentId());
+
         return $query->where(array_filter($request->only(['date', 'status'])))->latest()->paginate(
             (int) $request->get('per_page'),
             ['*'],
