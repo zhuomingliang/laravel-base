@@ -16,7 +16,7 @@ class LocalInformationController extends Controller {
             $query->where('title', '~', $where['title']);
         }
 
-        return $query->where(array_filter($request->only(['status'])))->latest()->paginate(
+        return $query->where(array_filter($request->only(['status'])))->latest('created_at')->paginate(
             (int) $request->get('per_page'),
             ['*'],
             'current_page'
