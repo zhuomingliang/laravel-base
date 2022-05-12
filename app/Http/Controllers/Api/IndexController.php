@@ -109,7 +109,7 @@ class IndexController extends Controller{
         $expo_id = HomeDecorationExpo::getCurrentId();
         if(empty($expo_id))return $this->conflict('缺少必要参数expo_id');
         if(empty($uniq_no))return $this->conflict('缺少必要参数uniq_no');
-        $wx = $this->getOpenid($uniq_no);
+        $wx = $this->getOpenid($uniq_no);//ovoJQ4_5j5FcGZ32-oc1OPOjd6KA
         if(!isset($wx['openid']))return $this->conflict('缺少必要参数openid');
         $ginnfo = GuestInformation::where(['guest_information.home_decoration_expo_id'=>$expo_id,'guest_information.uniq_no'=>$wx['openid']])
             ->leftJoin('check_in','guest_information.id','=','check_in.guest_information_id')
@@ -184,7 +184,7 @@ class IndexController extends Controller{
         if($count <= 0){
             return ['msg'=>'成功','count'=>$count, 'data'=>array()];
         }
-        $daList = DiningArrangements::select(['id','home_decoration_expo_id','date','breakfast_place','breakfast_picture', 'lunch_place','lunch_picture','dinner_place','dinner_picture','status','created_at'])->where($where)->forPage($currpage, $limit)->get();
+        $daList = DiningArrangements::select(['id','home_decoration_expo_id','date','breakfast_place','breakfast_picture', 'lunch_place','lunch_picture','dinner_place','dinner_picture','status','created_at'])->where($where)->forPage($currpage, $limit)->orderBy('date','asc')->get();
 
        return ['msg'=>'成功','count'=>$count, 'data'=>$daList->toArray()];
 
@@ -296,16 +296,20 @@ class IndexController extends Controller{
         foreach ($taList as $k => $v){
             $taList[$k]['vehicle_safeguard'] =  array();
             $taList[$k]['medical_security'] =  array();
+            $where1 = array();
+            $where2 = array();
             //车辆保障
             $where1[] = ['hotel_information_id','=',$v['id']];
             $where1[] = ['status','=',true];
             $vehicleSafeguard = VehicleSafeguard::select()->where($where1)->get();
             if(!empty($vehicleSafeguard))$taList[$k]['vehicle_safeguard'] = $vehicleSafeguard->toArray();
+
             //医疗保障
             $where2[] = ['hotel_information_id','=',$v['id']];
             $where2[] = ['status','=',true];
-            $sedicalSecurity = MedicalSecurity::select()->where($where2)->orderBy('date','asc')->get();
-            if(!empty($sedicalSecurity))$taList[$k]['medical_security'] = $sedicalSecurity->toArray();
+            $medicalSecurity = MedicalSecurity::select()->where($where2)->orderBy('date','asc')->get();
+            if(!empty($medicalSecurity))$taList[$k]['medical_security'] = $medicalSecurity->toArray();
+
         }
         return ['msg'=>'成功','count'=>$count, 'data'=>$taList];
     }
@@ -408,11 +412,12 @@ class IndexController extends Controller{
     {
         $currpage = (int)$request->get('currpage',1);
         $limit = (int)$request->get('limit', 10);
-        $id = $request->get('id');
-        $where[] =['status','=',true];
-        if(!empty($id))
+        $expo_id = HomeDecorationExpo::getCurrentId();
+        if(empty($expo_id))return $this->conflict('家博会ID不能为空');
+        $where[] = ['status','=',true];
+        if(!empty($expo_id))
         {
-            $where[] = ['id','=',$id];
+            $where[] = ['home_decoration_expo_id','=',$expo_id];
         }
 
         $count = AccommodationArrangements::where($where)->count();
