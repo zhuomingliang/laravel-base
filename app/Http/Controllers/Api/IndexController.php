@@ -58,7 +58,8 @@ class IndexController extends Controller{
         $data = $request->all();
         $user = $data['user'];
         $phone = $data['phone'];
-        $expo_id = (int)$data['expo_id'];
+        //$expo_id = (int)$data['expo_id'];
+        $expo_id = HomeDecorationExpo::getCurrentId();
         $uniq_no = $data['uniq_no'];
 
         if(empty($user))return $this->conflict('请输入姓名');
@@ -107,21 +108,27 @@ class IndexController extends Controller{
         //$expo_id = $data['expo_id'];
         $uniq_no = $data['uniq_no'];
         $expo_id = HomeDecorationExpo::getCurrentId();
+
         if(empty($expo_id))return $this->conflict('缺少必要参数expo_id');
         if(empty($uniq_no))return $this->conflict('缺少必要参数uniq_no');
-        $wx = $this->getOpenid($uniq_no);//ovoJQ4_5j5FcGZ32-oc1OPOjd6KA
+        $wx = $this->getOpenid($uniq_no);
         if(!isset($wx['openid']))return $this->conflict('缺少必要参数openid');
         $ginnfo = GuestInformation::where(['guest_information.home_decoration_expo_id'=>$expo_id,'guest_information.uniq_no'=>$wx['openid']])
+        //$ginnfo = GuestInformation::where(['guest_information.home_decoration_expo_id'=>$expo_id,'guest_information.uniq_no'=>$uniq_no])
             ->leftJoin('check_in','guest_information.id','=','check_in.guest_information_id')
             ->first();
         //是否签到
         if(!empty($ginnfo)){
             $info['is_sign'] = 1;
             $info['msg'] = '已签到';
+            $info['ginnfo'] = $ginnfo;
+            $info['wx'] = $wx;
             return $info;
         }else{
             $info['is_sign'] = -1;
             $info['msg'] = '未签到';
+            $info['ginnfo'] = $ginnfo;
+            $info['wx'] = $wx;
             return $info;
         }
     }
