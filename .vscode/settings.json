@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "127.0.0.1",
+            "port": 5433,
+            "driver": "PostgreSQL",
+            "name": "postgres",
+            "username": "postgres",
+            "password": "123456",
+            "database": "casen"
+        }
+    ],
+    "i18n-ally.localesPaths": [
+        "resources/lang"
+    ]
+}

@@ -22,8 +22,8 @@ class CreateUsersTable extends Migration {
         });
 
         $user = \App\Models\User::factory()->create([
-            'username' => 'HomeDecorationExpo',
-            'email' => 'HomeDecorationExpo@jxbashen.com',
+            'username' => 'GanzhouStatisticalInformation',
+            'email' => 'GanzhouStatisticalInformation@jxbashen.com',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' // 密码：password
         ]);
     }
