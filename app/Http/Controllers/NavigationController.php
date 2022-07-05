@@ -99,7 +99,7 @@ class NavigationController extends Controller {
                 MainMenu::where('name', $main_nav)->update($data);
             }
         } catch (\Exception $e) {
-        dd($e->getMessage());
+            dd($e->getMessage());
             return $this->conflict('已存在该导航栏');
         }
 
@@ -176,65 +176,5 @@ class NavigationController extends Controller {
         }
 
         return $this->noContent();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create() {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request) {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MainMenu  $mainMenu
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MainMenu $mainMenu) {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MainMenu  $mainMenu
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MainMenu $mainMenu) {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MainMenu  $mainMenu
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MainMenu $mainMenu) {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MainMenu  $mainMenu
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MainMenu $mainMenu) {
-        //
     }
 }
