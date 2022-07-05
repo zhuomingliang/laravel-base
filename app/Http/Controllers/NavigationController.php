@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MainMenu;
+use App\Models\SubMenu;
 use Illuminate\Http\Request;
 
 class NavigationController extends Controller {
@@ -40,6 +41,46 @@ class NavigationController extends Controller {
         }
 
         return $result;
+    }
+
+
+    public function putMainOrder(Request $request) {
+        try {
+            $data = $request->only(['main_order']);
+            
+            $update_data = [];
+            if (!empty($data['main_order'])) {
+            	$update_data['order'] = (int)$data['main_order'];
+            }
+
+            if(!empty($update_data)) {
+                MainMenu::where('name', $request->get('main_nav', ''))->update($update_data);
+            }
+        } catch (\Exception $e) {
+            return $this->conflict('更新失败');
+        }
+
+        return $this->noContent();
+    }
+
+    public function putSubOrder(Request $request) {
+        try {
+            $data = $request->only(['sub_order']);
+            
+            $update_data = [];
+            if (!empty($data['sub_order'])) {
+            	$update_data['order'] = (int)$data['sub_order'];
+            }
+
+            if(!empty($update_data)) {
+                SubMenu::where('name', $request->get('sub_nav', ''))->update($update_data);
+            }
+        } catch (\Exception $e) {
+        dd($e->getMessage());
+            return $this->conflict('更新失败');
+        }
+
+        return $this->noContent();
     }
 
     /**

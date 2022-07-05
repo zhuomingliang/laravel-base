@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('main_menu', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique()->comment('名称');
-            $table->smallInteger('order')->comment('顺序');
+            $table->smallInteger('order')->default(1)->comment('顺序');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
