@@ -86,6 +86,26 @@ class NavigationController extends Controller {
         return $this->noContent();
     }
 
+    public function putMainMenu2(Request $request) {
+        try {
+            $data = $request->only([ 'main_nav', 'new_main_nav']);
+
+            if (!empty($data['main_nav']) && !empty($data['new_main_nav'])) {
+                $data['name'] = $data['new_main_nav'];
+                $main_nav = $data['main_nav'];
+                unset($data['main_nav']);
+                unset($data['new_main_nav']);
+
+                MainMenu::where('name', $main_nav)->update($data);
+            }
+        } catch (\Exception $e) {
+        dd($e->getMessage());
+            return $this->conflict('已存在该导航栏');
+        }
+
+        return $this->noContent();
+    }
+
     public function postSubMenu(Request $request) {
         try {
             $data = array_filter($request->only([ 'main_menu_id', 'sub_nav' ]));
