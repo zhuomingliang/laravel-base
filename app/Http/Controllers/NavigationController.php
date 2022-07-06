@@ -180,4 +180,30 @@ class NavigationController extends Controller {
 
         return $this->noContent();
     }
+
+    //修改状态
+    public function PutMainMenuStatus(Request $request) {
+        $content = MainMenu::findOrFail((int) $request->get('id'));
+
+        try {
+            $content->update($request->only(['status']));
+        } catch (\Exception $e) {
+            return $this->conflict('更新失败');
+        }
+
+        return $this->noContent();
+    }
+
+    //修改状态
+    public function PutSubMenuStatus(Request $request) {
+        $content = SubMenu::findOrFail((int) $request->get('id'));
+
+        try {
+            $content->update($request->only(['status']));
+        } catch (\Exception $e) {
+            return $this->conflict('更新失败');
+        }
+
+        return $this->noContent();
+    }
 }
