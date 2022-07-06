@@ -75,4 +75,17 @@ class ContentController extends Controller {
 
         return $this->unprocessableEntity();
     }
+
+    //修改状态
+    public function PutStatus(Request $request) {
+        $content = Content::findOrFail((int) $request->get('id'));
+
+        try {
+            $content->update($request->only(['status']));
+        } catch (\Exception $e) {
+            return $this->conflict('更新失败');
+        }
+
+        return $this->noContent();
+    }
 }
