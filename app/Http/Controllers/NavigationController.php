@@ -41,7 +41,6 @@ class NavigationController extends Controller {
                 $result['data'][$key]['rowspan'] = 0;
             }
 
-
             $last_main_nav = $data['main_nav'];
         }
 
@@ -50,6 +49,10 @@ class NavigationController extends Controller {
 
     public function getMainMenu() {
         return MainMenu::all(['id', 'name']);
+    }
+
+    public function getSubMenuByMainMenuId(Request $request) {
+        return SubMenu::where('main_menu_id', $request->get('main_menu_id', 0))->get(['id', 'name']);
     }
 
     public function postMainMenu(Request $request) {

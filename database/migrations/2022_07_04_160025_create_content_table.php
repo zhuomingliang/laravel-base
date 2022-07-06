@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->bigInteger('sub_menu_id');
             $table->string('title')->comment('标题');
             $table->text('content')->comment('内容');
+            $table->int('views')->default(0)->comment('访问次数');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
