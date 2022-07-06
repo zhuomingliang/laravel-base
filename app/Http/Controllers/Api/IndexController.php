@@ -33,6 +33,6 @@ class IndexController extends Controller {
     }
 
     public function getContentById(Request $request) {
-        return Content::where('id', $request->get('id', 0))->first(['id', 'title', 'created_at']);
+        return Content::where('id', $request->get('id', 0))->first(['id', 'title', 'content', 'created_at']);
     }
 }

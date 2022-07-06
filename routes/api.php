@@ -47,4 +47,8 @@ Route::post('/sanctum/token', function (Request $request) {
 
 Route::group(['namespace'=>'App\Http\Controllers\Api'], function () {
     Route::any('index', 'IndexController@index');
+    Route::get('getMainMenu', 'IndexController@getMainMenu');
+    Route::any('getSubMenuByMainMenuId', 'IndexController@getSubMenuByMainMenuId');
+    Route::any('getContentListBySubMenuId', 'IndexController@getContentListBySubMenuId');
+    Route::any('getContentById', 'IndexController@getContentById');
 });
