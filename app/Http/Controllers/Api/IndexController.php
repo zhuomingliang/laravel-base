@@ -32,6 +32,15 @@ class IndexController extends Controller {
             );
     }
 
+    public function getLastNContentListBySubMenuId(Request $request) {
+        return Content::where('sub_menu_id', $request->get('id', 0))
+            ->where('status', true)->orderBy('created_at', 'desc')
+            ->limit(max($request->get('limit', 10), 20))
+            ->get(
+                ['id', 'title', 'created_at'],
+            );
+    }
+
     public function getContentById(Request $request) {
         return Content::where('id', $request->get('id', 0))->first(['id', 'title', 'content', 'created_at']);
     }
