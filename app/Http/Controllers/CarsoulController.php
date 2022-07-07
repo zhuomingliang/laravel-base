@@ -37,7 +37,6 @@ class CarsoulController extends Controller {
 
             Carsoul::insert($data);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return $this->conflict('新增失败');
         }
 
