@@ -30,7 +30,7 @@ class CarsoulController extends Controller {
             );
     }
 
-    //新增
+    // 新增
     public function PostIndex(Request $request) {
         try {
             $data = $request->only([ 'module_id', 'picture', 'title', 'link' ]);
@@ -44,7 +44,7 @@ class CarsoulController extends Controller {
         return $this->created();
     }
 
-    //修改
+    // 修改
     public function PutIndex(Request $request) {
         try {
             Carsoul::where('id', (int)$request->get('id', 0))->update($request->only([
@@ -57,7 +57,7 @@ class CarsoulController extends Controller {
         return $this->noContent();
     }
 
-    //删除
+    // 删除
     public function DeleteIndex(Request $request) {
         try {
             if (Carsoul::where('id', (int)$request->get('id', 0))->delete()) {
@@ -90,7 +90,7 @@ class CarsoulController extends Controller {
         return $this->noContent();
     }
 
-    //修改状态
+    // 修改状态
     public function PutStatus(Request $request) {
         $content = Carsoul::findOrFail((int) $request->get('id'));
 
