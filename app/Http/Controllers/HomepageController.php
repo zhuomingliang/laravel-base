@@ -94,6 +94,28 @@ class HomepageController extends Controller {
         return $this->unprocessableEntity();
     }
 
+    public function putOrder(Request $request) {
+        try {
+            $data = $request->only(['order']);
+
+            $update_data = [];
+            if (!empty($data['order'])) {
+                $update_data['order'] = (int)$data['order'];
+            }
+
+            if (!empty($update_data)) {
+                Homepage::join('sub_menu', 'homepage.sub_menu_id', '=', 'sub_menu.id')
+                    ->where('module_id', $request->get('module_id', 0))
+                    ->where('sub_menu.name', $request->get('sub_menu', ''))
+                    ->update($update_data);
+            }
+        } catch (\Exception $e) {
+            return $this->conflict('更新失败');
+        }
+
+        return $this->noContent();
+    }
+
     //修改状态
     public function PutStatus(Request $request) {
         $content = Homepage::findOrFail((int) $request->get('id'));
