@@ -23,7 +23,9 @@ class CreatePermissionGroupTable extends Migration {
 
     public function insertPermissionGroups() {
         PermissionGroup::create(['id' => 1, 'name' => '系统管理']);
-        PermissionGroup::create(['id' => 2, 'name' => '网站管理']);
+        PermissionGroup::create(['id' => 2, 'name' => '内容管理']);
+        PermissionGroup::create(['id' => 3, 'name' => '首页管理']);
+        PermissionGroup::create(['id' => 4, 'name' => '导航栏管理']);
     }
 
     /**

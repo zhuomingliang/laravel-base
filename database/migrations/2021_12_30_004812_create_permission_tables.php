@@ -146,10 +146,26 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 1, 'cname' => '系统日志', 'name' => 'SystemLog']);
 
         // 导航栏
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '导航栏', 'name' => 'Navigation']);
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '新增导航栏', 'name' => 'Navigation/PostIndex']);
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '修改导航栏', 'name' => 'Navigation/PutIndex']);
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '删除导航栏', 'name' => 'Navigation/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '导航栏', 'name' => 'Navigation']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '新增导航栏', 'name' => 'Navigation/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改导航栏', 'name' => 'Navigation/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '删除导航栏', 'name' => 'Navigation/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '获取一级导航栏', 'name' => 'Navigation/getMainMenu']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '新增一级导航栏', 'name' => 'Navigation/postMainMenu']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改一级导航栏', 'name' => 'Navigation/putMainMenu']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改一级导航栏2', 'name' => 'Navigation/putMainMenu2']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '获取二级导航栏', 'name' => 'Navigation/getSubMenuByMainMenuId']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '新增二级导航栏', 'name' => 'Navigation/postSubMenu']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改二级导航栏', 'name' => 'Navigation/putSubMenu']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改一级导航栏顺序', 'name' => 'Navigation/putMainOrder']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改二级导航栏顺序', 'name' => 'Navigation/putSubOrder']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改一级导航栏状态', 'name' => 'Navigation/PutMainMenuStatus']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改二级导航栏状态', 'name' => 'Navigation/PutSubMenuStatus']);
+
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '尾部导航栏', 'name' => 'TailNavigation']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '新增尾部导航栏', 'name' => 'TailNavigation/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '修改尾部导航栏', 'name' => 'TailNavigation/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 4, 'cname' => '删除尾部导航栏', 'name' => 'TailNavigation/DeleteIndex']);
 
         // 网站内容
         Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '网站内容', 'name' => 'Content']);
@@ -157,11 +173,21 @@ class CreatePermissionTables extends Migration {
         Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '修改内容', 'name' => 'Content/PutIndex']);
         Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '删除内容', 'name' => 'Content/DeleteIndex']);
 
+        // 首页模块管理
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '首页模块管理', 'name' => 'Homepage']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增首页模块', 'name' => 'Homepage/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改首页模块', 'name' => 'Homepage/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除首页模块', 'name' => 'Homepage/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改顺序', 'name' => 'Homepage/putOrder']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'Homepage/putStatus']);
+
         // 轮播图
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '轮播图', 'name' => 'Carsoul']);
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '新增轮播图', 'name' => 'Carsoul/PostIndex']);
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '修改轮播图', 'name' => 'Carsoul/PutIndex']);
-        Permission::create(['guard_name' => 'admin', 'pg_id' => 2, 'cname' => '删除轮播图', 'name' => 'Carsoul/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '轮播图', 'name' => 'Carsoul']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '新增轮播图', 'name' => 'Carsoul/PostIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改轮播图', 'name' => 'Carsoul/PutIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '删除轮播图', 'name' => 'Carsoul/DeleteIndex']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改顺序', 'name' => 'Carsoul/putOrder']);
+        Permission::create(['guard_name' => 'admin', 'pg_id' => 3, 'cname' => '修改状态', 'name' => 'Carsoul/putStatus']);
     }
 
     /**

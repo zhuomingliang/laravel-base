@@ -105,7 +105,6 @@ class NavigationController extends Controller {
                 MainMenu::where('name', $main_nav)->update($data);
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return $this->conflict('已存在该导航栏');
         }
 
