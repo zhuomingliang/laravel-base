@@ -10,6 +10,7 @@ class Carsoul extends Model {
     use HasFactory;
     use SoftDeletes;
 
+    protected $table = 'carsoul';
     protected $guarded = [];
 
     /**
