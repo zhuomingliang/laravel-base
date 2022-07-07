@@ -11,7 +11,7 @@ return new class extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('home_page', function (Blueprint $table) {
+        Schema::create('homepage', function (Blueprint $table) {
             $table->id();
             $table->integer('module_id')->default(0)->comment('模块 ID');
             $table->bigInteger('sub_menu_id')->comment('二级导航栏 ID');
@@ -29,6 +29,6 @@ return new class extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('home_page');
+        Schema::dropIfExists('homepage');
     }
 };

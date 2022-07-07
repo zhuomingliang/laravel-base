@@ -22,9 +22,12 @@ class NavigationController extends Controller {
         }
 
         $result = $query->leftJoin('sub_menu', 'main_menu.id', '=', 'sub_menu.main_menu_id')
-            ->where(array_filter($request->only(['phone'])))->orderBy('main_menu.order', 'asc')->orderBy('sub_menu.order', 'asc')->paginate(
+            ->orderBy('main_menu.order', 'asc')
+            ->orderBy('sub_menu.order', 'asc')
+            ->paginate(
                 (int) $request->get('per_page'),
-                ['main_menu.id as main_menu_id', 'main_menu.name as main_nav', \DB::raw('(select count(1) from sub_menu where main_menu_id = main_menu.id) as rowspan'),
+                ['main_menu.id as main_menu_id', 'main_menu.name as main_nav',
+                 \DB::raw('(select count(1) from sub_menu where main_menu_id = main_menu.id) as rowspan'),
                  'main_menu.order as main_order', 'sub_menu.id as sub_menu_id',
                  'sub_menu.name as sub_nav', 'sub_menu.order as sub_order',
                  'sub_menu.created_at', 'sub_menu.updated_at'],

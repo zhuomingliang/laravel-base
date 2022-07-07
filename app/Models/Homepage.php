@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class HomePage extends Model {
+class Homepage extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'home_page';
+    protected $table = 'homepage';
     protected $guarded = [];
 
     /**
