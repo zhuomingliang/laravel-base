@@ -24,7 +24,7 @@ class IndexController extends Controller {
 
     public function getContentListBySubMenuId(Request $request) {
         return Content::where('sub_menu_id', $request->get('id', 0))
-            ->where('status', true)->orderBy('created_at', 'desc')
+            ->where('content.status', true)->orderBy('content.created_at', 'desc')
             ->paginate(
                 (int) $request->get('per_page'),
                 ['id', 'title', 'created_at'],
@@ -34,7 +34,7 @@ class IndexController extends Controller {
 
     public function getLastNContentListBySubMenuId(Request $request) {
         return Content::where('sub_menu_id', $request->get('id', 0))
-            ->where('status', true)->orderBy('created_at', 'desc')
+            ->where('content.status', true)->orderBy('content.created_at', 'desc')
             ->limit(max($request->get('limit', 10), 20))
             ->get(
                 ['id', 'title', 'created_at'],
