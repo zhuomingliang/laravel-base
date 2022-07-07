@@ -11,9 +11,8 @@ return new class extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('content', function (Blueprint $table) {
+        Schema::create('tail_navigation', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('sub_menu_id');
             $table->string('title')->comment('标题');
             $table->text('content')->comment('内容');
             $table->integer('views')->default(0)->comment('访问次数');
@@ -30,6 +29,6 @@ return new class extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('content');
+        Schema::dropIfExists('tail_navigation');
     }
 };

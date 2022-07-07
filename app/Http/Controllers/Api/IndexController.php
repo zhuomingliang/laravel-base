@@ -42,6 +42,10 @@ class IndexController extends Controller {
     }
 
     public function getContentById(Request $request) {
-        return Content::where('id', $request->get('id', 0))->first(['id', 'title', 'content', 'created_at']);
+        $content = Content::where('id', $request->get('id', 0));
+
+        $content->update(['views' => \DB::raw('"views" + 1')]);
+
+        return $content->first(['id', 'title', 'content', 'created_at']);
     }
 }

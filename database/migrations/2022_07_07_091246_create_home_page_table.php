@@ -11,12 +11,10 @@ return new class extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('content', function (Blueprint $table) {
+        Schema::create('home_page', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('sub_menu_id');
-            $table->string('title')->comment('标题');
-            $table->text('content')->comment('内容');
-            $table->integer('views')->default(0)->comment('访问次数');
+            $table->integer('module_id')->default(0)->comment('模块 ID');
+            $table->bigInteger('sub_menu_id')->comment('二级导航栏 ID');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
@@ -30,6 +28,6 @@ return new class extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('content');
+        Schema::dropIfExists('home_page');
     }
 };
