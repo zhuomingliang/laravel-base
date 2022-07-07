@@ -23,6 +23,7 @@ class NavigationController extends Controller {
 
         $result = $query->leftJoin('sub_menu', 'main_menu.id', '=', 'sub_menu.main_menu_id')
             ->orderBy('main_menu.order', 'asc')
+            ->orderBy('main_menu.id', 'asc')
             ->orderBy('sub_menu.order', 'asc')
             ->paginate(
                 (int) $request->get('per_page'),
