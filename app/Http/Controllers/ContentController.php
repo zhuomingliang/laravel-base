@@ -22,7 +22,7 @@ class ContentController extends Controller {
 
         return $query->join('sub_menu', 'content.sub_menu_id', '=', 'sub_menu.id')
             ->join('main_menu', 'sub_menu.main_menu_id', '=', 'main_menu.id')
-            ->where(array_filter($request->only(['phone'])))->latest()->paginate(
+            ->latest()->paginate(
                 (int) $request->get('per_page'),
                 [
                     'main_menu.id as main_menu_id',
@@ -33,6 +33,22 @@ class ContentController extends Controller {
                 ],
                 'current_page'
             );
+    }
+
+    public function getSearch(Request $request) {
+        $where = array_filter($request->only(['keyword']));
+        $query = Content::query();
+
+        if (!empty($where)) {
+            $keyword = trim($where['keyword']);
+            if (is_numeric($keyword)) {
+                $query->where('content.id', $keyword);
+            } else {
+                $query->where('content.title', '~', $keyword);
+            }
+        }
+
+        return $query->latest()->limit(20)->get(['id', 'title']);
     }
 
     //新增

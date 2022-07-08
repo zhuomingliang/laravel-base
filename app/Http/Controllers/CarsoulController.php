@@ -20,14 +20,22 @@ class CarsoulController extends Controller {
             $query->where('title', '~', $where['title']);
         }
 
-        return $query
+        $result = $query
             ->orderBy('module_id', 'asc')
             ->orderBy('order', 'asc')
             ->paginate(
                 (int) $request->get('per_page'),
                 [ '*' ],
                 'current_page'
-            );
+            )->toArray();
+
+        foreach ($result['data'] as $key => $data) {
+            if (is_numeric($data['link'])) {
+                $result['data'][$key]['link'] = (int) $data['link'];
+            }
+        }
+
+        return $result;
     }
 
     // 新增
