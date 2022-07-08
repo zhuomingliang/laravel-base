@@ -13,9 +13,11 @@ return new class extends Migration {
     public function up() {
         Schema::create('carsoul', function (Blueprint $table) {
             $table->id();
-            $table->smallInteger('position')->comment('位置');
-            $table->string('image');
-            $table->string('link');
+            $table->smallInteger('module_id')->comment('模块 ID');
+            $table->string('image')->comment('图片');
+            $table->string('title')->comment('标题');
+            $table->string('link')->comment('链接');
+            $table->integer('order')->default(1)->comment('顺序');
             $table->boolean('status')->default(true)->comment('状态');
             $table->softDeletes('deleted_at', 0)->comment('软删除');
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');

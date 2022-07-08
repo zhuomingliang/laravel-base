@@ -33,7 +33,11 @@ class CarsoulController extends Controller {
     // 新增
     public function PostIndex(Request $request) {
         try {
-            $data = $request->only([ 'module_id', 'picture', 'title', 'link' ]);
+            $data = $request->only([ 'module_id', 'image', 'title', 'link' ]);
+
+            if (isset($data['image'][0])) {
+                $data['image'] = $data['image'][0];
+            }
 
             Carsoul::insert($data);
         } catch (\Exception $e) {
@@ -47,7 +51,7 @@ class CarsoulController extends Controller {
     public function PutIndex(Request $request) {
         try {
             Carsoul::where('id', (int)$request->get('id', 0))->update($request->only([
-                'module_id', 'picture', 'title', 'link'
+                'module_id', 'image', 'title', 'link'
             ]));
         } catch (\Exception $e) {
             return $this->conflict('更新失败');
