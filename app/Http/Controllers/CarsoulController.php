@@ -50,9 +50,13 @@ class CarsoulController extends Controller {
     // 修改
     public function PutIndex(Request $request) {
         try {
-            Carsoul::where('id', (int)$request->get('id', 0))->update($request->only([
-                'module_id', 'image', 'title', 'link'
-            ]));
+            $data = $request->only([ 'module_id', 'image', 'title', 'link' ]);
+
+            if (isset($data['image'][0])) {
+                $data['image'] = $data['image'][0];
+            }
+
+            Carsoul::where('id', (int)$request->get('id', 0))->update($data);
         } catch (\Exception $e) {
             return $this->conflict('更新失败');
         }
