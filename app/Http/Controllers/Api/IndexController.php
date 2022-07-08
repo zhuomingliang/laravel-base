@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\MainMenu;
 use App\Models\SubMenu;
 use App\Models\Content;
+use App\Models\Homepage;
 
 class IndexController extends Controller {
     public function index() {
@@ -41,11 +42,27 @@ class IndexController extends Controller {
             );
     }
 
+    public function getLastNContentListBySubMenuIds(Request $request) {
+        return Content::whereIn('sub_menu_id', explode(',', $request->get('id', 0)))
+            ->where('content.status', true)
+            ->orderBy('content.created_at', 'desc')
+            ->limit(max($request->get('limit', 10), 20))
+            ->get(
+                ['sub_menu_id', 'id', 'title', 'created_at'],
+            );
+    }
+
     public function getContentById(Request $request) {
         $content = Content::where('id', $request->get('id', 0));
 
         $content->update(['views' => \DB::raw('"views" + 1')]);
 
         return $content->first(['id', 'title', 'content', 'created_at']);
+    }
+
+    public function getHomepageSubMenu(Request $request) {
+        return Homepage::Join('sub_menu', 'homepage.sub_menu_id', '=', 'sub_menu.id')
+            ->orderBy('homepage.module_id', 'asc')
+            ->orderBy('homepage.order', 'asc')->get(['module_id', 'sub_menu_id', 'sub_menu.name as sub_menu']);
     }
 }
