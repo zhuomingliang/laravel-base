@@ -60,9 +60,15 @@ class HomepageController extends Controller {
                 'module_id', 'sub_menu_id', 'status'
             ]);
 
+            $count = Homepage::where('module_id', $data['module_id'])->count();
+
+            if ($count >= 2) {
+                return $this->conflict('新增失败，同一个模块最多两个二级导航栏');
+            }
+
             Homepage::insert($data);
         } catch (\Exception $e) {
-            return $this->conflict('新增失败');
+            return $this->conflict('新增失败，该模块存在重复的二级导航栏');
         }
 
         return $this->created();
