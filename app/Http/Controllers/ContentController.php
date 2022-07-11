@@ -12,12 +12,24 @@ class ContentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function getIndex(Request $request) {
-        $where = array_filter($request->only(['title']));
+        $where = array_filter($request->only(['main_menu_id', 'sub_menu_id', 'title', 'status']));
 
         $query = Content::query();
 
-        if (!empty($where)) {
+        if (!empty($where['main_menu_id'])) {
+            $query->where('main_menu.main_menu_id', $where['main_menu_id']);
+        }
+
+        if (!empty($where['sub_menu_id'])) {
+            $query->where('sub_menu.sub_menu_id', $where['sub_menu_id']);
+        }
+
+        if (!empty($where['title'])) {
             $query->where('content.title', '~', $where['title']);
+        }
+
+        if (!empty($where['status'])) {
+            $query->where('content.status', $where['status']);
         }
 
         return $query->join('sub_menu', 'content.sub_menu_id', '=', 'sub_menu.id')
