@@ -8,15 +8,29 @@ use App\Models\MainMenu;
 use App\Models\SubMenu;
 use App\Models\Content;
 use App\Models\Homepage;
+use App\Models\Carsoul;
+use App\Models\TailNavigation;
+use App\Models\Visits;
 
 class IndexController extends Controller {
     public function index() {
         return true;
     }
 
+
+    private function updateVisits() {
+        Visits::upsert(
+            ['date' => date("Y-m-d"), 'views' =>1],
+            ['date'],
+            ['views' => \DB::raw('"visits"."views" + 1')]
+        );
+    }
     public function getMainMenu() {
+        $this->updateVisits();
+
         return MainMenu::where('status', true)->orderBy('order', 'asc')->get(['id', 'name']);
     }
+
 
     public function getSubMenuByMainMenuId(Request $request) {
         return SubMenu::where('main_menu_id', $request->get('id', 0))
@@ -24,6 +38,8 @@ class IndexController extends Controller {
     }
 
     public function getContentListBySubMenuId(Request $request) {
+        $this->updateVisits();
+
         return Content::where('sub_menu_id', $request->get('id', 0))
             ->where('content.status', true)->orderBy('content.created_at', 'desc')
             ->paginate(
@@ -34,6 +50,8 @@ class IndexController extends Controller {
     }
 
     public function getLastNContentListBySubMenuId(Request $request) {
+        $this->updateVisits();
+
         return Content::where('sub_menu_id', $request->get('id', 0))
             ->where('content.status', true)->orderBy('content.created_at', 'desc')
             ->limit(max($request->get('limit', 10), 20))
@@ -43,6 +61,8 @@ class IndexController extends Controller {
     }
 
     public function getLastNContentListBySubMenuIds(Request $request) {
+        $this->updateVisits();
+
         return Content::whereIn('sub_menu_id', explode(',', $request->get('id', 0)))
             ->where('content.status', true)
             ->orderBy('content.created_at', 'desc')
@@ -53,6 +73,8 @@ class IndexController extends Controller {
     }
 
     public function getContentById(Request $request) {
+        $this->updateVisits();
+
         $content = Content::where('id', $request->get('id', 0));
 
         $content->update(['views' => \DB::raw('"views" + 1')]);
@@ -64,5 +86,32 @@ class IndexController extends Controller {
         return Homepage::Join('sub_menu', 'homepage.sub_menu_id', '=', 'sub_menu.id')
             ->orderBy('homepage.module_id', 'asc')
             ->orderBy('homepage.order', 'asc')->get(['module_id', 'sub_menu_id', 'sub_menu.name as sub_menu']);
+    }
+
+    public function getHomepageCarsoul(Request $request) {
+        return Carsoul::orderBy('module_id', 'asc')
+            ->orderBy('order', 'asc')->get(['module_id', 'image', 'title', 'link']);
+    }
+
+    public function getTailNavigation(Request $request) {
+        return TailNavigation::all(['id', 'title']);
+    }
+
+    public function getTailNavigationContentById(Request $request) {
+        $this->updateVisits();
+
+        return TailNavigation::where('id', $request->get('id', 0))->first(['id', 'title']);
+    }
+
+    public function getVisitsStatistics() {
+        return \Cache::remember('VisitsStatistics', 60, function () {
+            $result['total'] = Visits::sum('views');
+            $result['today'] = Visits::where('date', date('Y-m-d'))->first(['date', 'views']);
+            $result['yesterday'] = Visits::where('date', date('Y-m-d', strtotime("-1 day")))->first(['date', 'views']);
+            $result['max'] = Visits::orderBy('views', 'desc')->first(['date', 'views']);
+            $result['average'] = Visits::first([\DB::raw('avg("views")')]);
+
+            return $result;
+        });
     }
 }

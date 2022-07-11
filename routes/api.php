@@ -54,4 +54,8 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function () {
     Route::any('getLastNContentListBySubMenuIds', 'IndexController@getLastNContentListBySubMenuIds');
     Route::any('getContentById', 'IndexController@getContentById');
     Route::any('getHomepageSubMenu', 'IndexController@getHomepageSubMenu');
+    Route::any('getHomepageCarsoul', 'IndexController@getHomepageCarsoul');
+    Route::any('getTailNavigation', 'IndexController@getTailNavigation');
+    Route::any('getTailNavigationContentById', 'IndexController@getTailNavigationContentById');
+    Route::any('getVisitsStatistics', 'IndexController@getVisitsStatistics');
 });
