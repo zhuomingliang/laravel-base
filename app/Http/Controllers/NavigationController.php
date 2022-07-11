@@ -26,7 +26,7 @@ class NavigationController extends Controller {
             ->orderBy('main_menu.id', 'asc')
             ->orderBy('sub_menu.order', 'asc')
             ->paginate(
-                (int) $request->get('per_page'),
+                max((int) $request->get('per_page'), 10000),
                 ['main_menu.id as main_menu_id', 'main_menu.name as main_nav',
                  \DB::raw('(select count(1) from sub_menu where main_menu_id = main_menu.id) as rowspan'),
                  'main_menu.order as main_order', 'sub_menu.id as sub_menu_id',

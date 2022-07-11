@@ -100,7 +100,7 @@ class IndexController extends Controller {
     public function getTailNavigationContentById(Request $request) {
         $this->updateVisits();
 
-        return TailNavigation::where('id', $request->get('id', 0))->first(['id', 'title']);
+        return TailNavigation::where('id', $request->get('id', 0))->first(['id', 'title', 'content']);
     }
 
     public function getVisitsStatistics() {

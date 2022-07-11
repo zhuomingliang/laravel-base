@@ -33,6 +33,19 @@ class UserController extends Controller {
         );
     }
 
+    public function postIndex(Request $request) {
+        try {
+            $data  = array_filter($request->only(['email', 'username', 'password']));
+
+            if (!empty($data['password'])) {
+                $data['password'] = bcrypt($data['password']);
+                User::create($data);
+            }
+        } catch (\Exception $e) {
+            return $this->conflict('新增失败');
+        }
+    }
+
     /**
      * @return \Illuminate\Http\JsonResponse
      */
