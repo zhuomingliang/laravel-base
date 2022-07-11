@@ -17,11 +17,11 @@ class ContentController extends Controller {
         $query = Content::query();
 
         if (!empty($where['main_menu_id'])) {
-            $query->where('main_menu.main_menu_id', $where['main_menu_id']);
+            $query->where('main_menu.id', $where['main_menu_id']);
         }
 
         if (!empty($where['sub_menu_id'])) {
-            $query->where('sub_menu.sub_menu_id', $where['sub_menu_id']);
+            $query->where('sub_menu.id', $where['sub_menu_id']);
         }
 
         if (!empty($where['title'])) {
