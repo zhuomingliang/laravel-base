@@ -29,8 +29,10 @@ class NavigationController extends Controller {
                 max((int) $request->get('per_page'), 10000),
                 ['main_menu.id as main_menu_id', 'main_menu.name as main_nav',
                  \DB::raw('(select count(1) from sub_menu where main_menu_id = main_menu.id) as rowspan'),
-                 'main_menu.order as main_order', 'sub_menu.id as sub_menu_id',
-                 'sub_menu.name as sub_nav', 'sub_menu.order as sub_order',
+                 'main_menu.order as main_order', 'main_menu.status as main_status',
+                 'sub_menu.id as sub_menu_id',
+                 'sub_menu.name as sub_nav',
+                 'sub_menu.order as sub_order', 'sub_menu.status as sub_status',
                  'sub_menu.created_at', 'sub_menu.updated_at'],
                 'current_page'
             )->toArray();
