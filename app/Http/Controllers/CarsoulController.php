@@ -25,14 +25,28 @@ class CarsoulController extends Controller {
             ->orderBy('order', 'asc')
             ->paginate(
                 (int) $request->get('per_page'),
-                [ '*' ],
+                [
+                    '*',
+                    \DB::raw('(select count(1) from carsoul c where c.module_id = carsoul.module_id) as rowspan')
+                ],
                 'current_page'
             )->toArray();
 
+        $last_module_id = 0;
         foreach ($result['data'] as $key => $data) {
             if (is_numeric($data['link'])) {
                 $result['data'][$key]['link'] = (int) $data['link'];
             }
+
+            if ($data['rowspan'] === 0) {
+                $result['data'][$key]['rowspan'] = 1;
+            }
+
+            if ($data['module_id'] === $last_module_id) {
+                $result['data'][$key]['rowspan'] = 0;
+            }
+
+            $last_module_id = $data['module_id'];
         }
 
         return $result;

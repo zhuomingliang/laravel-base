@@ -37,7 +37,7 @@ class HomepageController extends Controller {
                 'current_page'
             )->toArray();
 
-        $last_module_id = '';
+        $last_module_id = 0;
         foreach ($result['data'] as $key => $data) {
             if ($data['rowspan'] === 0) {
                 $result['data'][$key]['rowspan'] = 1;
