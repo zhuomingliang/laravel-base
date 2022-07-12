@@ -24,7 +24,7 @@ class CarsoulController extends Controller {
             ->orderBy('module_id', 'asc')
             ->orderBy('order', 'asc')
             ->paginate(
-                (int) $request->get('per_page'),
+                max((int) $request->get('per_page'), 10000),
                 [
                     '*',
                     \DB::raw('(select count(1) from carsoul c where c.module_id = carsoul.module_id) as rowspan')
