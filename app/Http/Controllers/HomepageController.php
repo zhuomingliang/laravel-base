@@ -25,7 +25,7 @@ class HomepageController extends Controller {
             ->orderBy('homepage.module_id', 'asc')
             ->orderBy('homepage.order', 'asc')
             ->paginate(
-                (int) $request->get('per_page'),
+                max((int) $request->get('per_page'), 10000),
                 [
                     'main_menu.id as main_menu_id',
                     'main_menu.name as main_menu',
