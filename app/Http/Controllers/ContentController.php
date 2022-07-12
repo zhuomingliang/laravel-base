@@ -60,7 +60,12 @@ class ContentController extends Controller {
             }
         }
 
-        return $query->where('content.status', true)->latest()->limit(20)->get(['id', 'title']);
+        return $query->where('content.status', true)
+            ->latest()->limit(20)
+            ->get([
+                'id',
+                \DB::raw('CASE WHEN length(title) > 20 THEN left(title, 20) || \'...\' ELSE title END as title')
+            ]);
     }
 
     //新增
