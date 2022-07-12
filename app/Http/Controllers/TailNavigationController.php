@@ -35,7 +35,7 @@ class TailNavigationController extends Controller {
     public function PostIndex(Request $request) {
         try {
             $data = $request->only([
-                'title', 'content'
+                'title', 'content', 'status'
             ]);
 
             TailNavigation::insert($data);
@@ -50,7 +50,7 @@ class TailNavigationController extends Controller {
     public function PutIndex(Request $request) {
         try {
             TailNavigation::where('id', (int)$request->get('id', 0))->update($request->only([
-                'title', 'content'
+                'title', 'content', 'status'
             ]));
         } catch (\Exception $e) {
             return $this->conflict('更新失败');

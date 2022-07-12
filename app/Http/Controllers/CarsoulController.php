@@ -41,7 +41,7 @@ class CarsoulController extends Controller {
     // 新增
     public function PostIndex(Request $request) {
         try {
-            $data = $request->only([ 'module_id', 'image', 'title', 'link' ]);
+            $data = $request->only([ 'module_id', 'image', 'title', 'link', 'status' ]);
 
             if (isset($data['image'][0])) {
                 $data['image'] = $data['image'][0];
@@ -58,7 +58,7 @@ class CarsoulController extends Controller {
     // 修改
     public function PutIndex(Request $request) {
         try {
-            $data = $request->only([ 'module_id', 'image', 'title', 'link' ]);
+            $data = $request->only([ 'module_id', 'image', 'title', 'link', 'status' ]);
 
             if (isset($data['image'][0])) {
                 $data['image'] = $data['image'][0];
