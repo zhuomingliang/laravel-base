@@ -54,7 +54,7 @@ class IndexController extends Controller {
 
         return Content::where('sub_menu_id', $request->get('id', 0))
             ->where('content.status', true)->orderBy('content.created_at', 'desc')
-            ->limit(max($request->get('limit', 10), 20))
+            ->limit(min($request->get('limit', 10), 20))
             ->get(
                 ['id', 'title', 'created_at'],
             );
@@ -63,13 +63,24 @@ class IndexController extends Controller {
     public function getLastNContentListBySubMenuIds(Request $request) {
         $this->updateVisits();
 
-        return Content::whereIn('sub_menu_id', explode(',', $request->get('id', 0)))
+        $content = [];
+        foreach (explode(',', $request->get('id', 0)) as $sub_menu_id) {
+            $content[] = Content::where('sub_menu_id', $sub_menu_id)
             ->where('content.status', true)
+            ->select('sub_menu_id', 'id', 'title', 'created_at')
             ->orderBy('content.created_at', 'desc')
-            ->limit(max($request->get('limit', 10), 20))
-            ->get(
-                ['sub_menu_id', 'id', 'title', 'created_at'],
-            );
+            ->limit(min($request->get('limit', 10), 20));
+        }
+
+        if (!empty($content)) {
+            $query = array_pop($content);
+
+            foreach ($content as $_query) {
+                $query->unionAll($_query);
+            }
+        }
+
+        return $query->get();
     }
 
     public function getContentById(Request $request) {
