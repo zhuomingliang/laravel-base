@@ -85,11 +85,13 @@ class IndexController extends Controller {
     public function getContentById(Request $request) {
         $this->updateVisits();
 
-        $content = Content::where('id', $request->get('id', 0));
+        $content = Content::where('content.id', $request->get('id', 0));
 
         $content->update(['views' => \DB::raw('"views" + 1')]);
 
-        return $content->first(['id', 'title', 'content', 'created_at']);
+        $content->join('sub_menu', 'content.sub_menu_id', 'sub_menu.id')
+            ->join('main_menu', 'sub_menu.main_menu_id', 'main_menu.id');
+        return $content->first(['main_menu.id as main_menu_id', 'sub_menu_id as sub_menu_id', 'content.id', 'content.title', 'content.content', 'content.created_at']);
     }
 
     public function getHomepageSubMenu(Request $request) {
@@ -146,5 +148,8 @@ class IndexController extends Controller {
                 [\DB::raw('\'' . implode(' ', $keyword) . '\' as keyword'), 'id', 'title', 'content', 'created_at'],
                 'current_page'
             );
+    }
+
+    public function getHotNews() {
     }
 }
