@@ -22,6 +22,9 @@ return new class extends Migration {
             $table->timestamp('created_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('创建时间');
             $table->timestamp('updated_at')->default(DB::raw('LOCALTIMESTAMP(0)'))->comment('更新时间');
         });
+
+        \DB::select('CREATE EXTENSION IF NOT EXISTS pgroonga;');
+        \DB::select('CREATE INDEX ON content USING pgroonga ((ARRAY[title, content]));');
     }
 
     /**

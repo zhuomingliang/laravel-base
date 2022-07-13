@@ -25,9 +25,8 @@ class IndexController extends Controller {
             ['views' => \DB::raw('"visits"."views" + 1')]
         );
     }
-    public function getMainMenu() {
-        $this->updateVisits();
 
+    public function getMainMenu() {
         return MainMenu::where('status', true)->orderBy('order', 'asc')->get(['id', 'name']);
     }
 
@@ -124,5 +123,28 @@ class IndexController extends Controller {
 
             return $result;
         });
+    }
+
+    public function getSearch(Request $request) {
+        $so = scws_new();
+        $so->set_charset('utf8');
+
+        $so->send_text(trim($request->get('keyword', '')));
+
+        $keyword = [];
+        while ($tmp = $so->get_result()) {
+            foreach ($tmp as $_keyword) {
+                $keyword[] = $_keyword['word'];
+            }
+        }
+
+        $so->close();
+        return Content::whereRaw('ARRAY[title, content] &@~ \'' . implode(' OR ', $keyword) . '\'')
+            ->latest()
+            ->paginate(
+                (int) $request->get('per_page'),
+                [\DB::raw('\'' . implode(' ', $keyword) . '\' as keyword'), 'id', 'title', 'content', 'created_at'],
+                'current_page'
+            );
     }
 }
