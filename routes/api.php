@@ -59,4 +59,5 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function () {
     Route::any('getTailNavigationContentById', 'IndexController@getTailNavigationContentById');
     Route::any('getVisitsStatistics', 'IndexController@getVisitsStatistics');
     Route::any('getSearch', 'IndexController@getSearch');
+    Route::any('getHotNews', 'IndexController@getHotNews');
 });

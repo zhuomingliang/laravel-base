@@ -39,11 +39,19 @@ class IndexController extends Controller {
     public function getContentListBySubMenuId(Request $request) {
         $this->updateVisits();
 
+        $count = Content::where('sub_menu_id', $request->get('id', 0))
+            ->where('content.status', true)->count();
+
+        $field = ['id', 'title', 'created_at'];
+        if ($count === 1) {
+            $field = ['id', 'title', 'content', 'created_at'];
+        }
+
         return Content::where('sub_menu_id', $request->get('id', 0))
             ->where('content.status', true)->orderBy('content.created_at', 'desc')
             ->paginate(
                 (int) $request->get('per_page'),
-                ['id', 'title', 'created_at'],
+                $field,
                 'current_page'
             );
     }
@@ -151,5 +159,6 @@ class IndexController extends Controller {
     }
 
     public function getHotNews() {
+        return Content::where('hot', true)->where('status', true)->limit(5)->get(['id', 'title']);
     }
 }
