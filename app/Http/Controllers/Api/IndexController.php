@@ -171,8 +171,8 @@ class IndexController extends Controller {
             $query->where('content.created_at', '<', $end_time);
         }
 
-        return $query->latest()
-            ->paginate(
+        try {
+            return $query->paginate(
                 (int) $request->get('per_page'),
                 [   \DB::raw('\'' . implode(' ', $keyword) . '\' as keyword'),
                     'main_menu.id as main_menu_id',
@@ -184,6 +184,9 @@ class IndexController extends Controller {
                 ],
                 'current_page'
             );
+        } catch (\Exception $e) {
+            return $this->noContent();
+        }
     }
 
     public function getHotNews() {
