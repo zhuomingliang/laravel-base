@@ -105,7 +105,15 @@ class IndexController extends Controller {
 
         $content->join('sub_menu', 'content.sub_menu_id', 'sub_menu.id')
             ->join('main_menu', 'sub_menu.main_menu_id', 'main_menu.id');
-        return $content->first(['main_menu.id as main_menu_id', 'sub_menu_id as sub_menu_id', 'content.id', 'content.title', 'content.content', 'content.created_at']);
+        return $content->first(
+            [   'main_menu.id as main_menu_id',
+                'sub_menu_id as sub_menu_id',
+                'content.id',
+                'content.title',
+                'content.content',
+                'content.views',
+                'content.created_at']
+        );
     }
 
     public function getHomepageSubMenu(Request $request) {
