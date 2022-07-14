@@ -48,7 +48,8 @@ class IndexController extends Controller {
         }
 
         return Content::where('sub_menu_id', $request->get('id', 0))
-            ->where('content.status', true)->orderBy('content.created_at', 'desc')
+            ->where('content.status', true)
+            ->orderBy('content.created_at', 'desc')
             ->paginate(
                 (int) $request->get('per_page'),
                 $field,
@@ -59,11 +60,14 @@ class IndexController extends Controller {
     public function getLastNContentListBySubMenuId(Request $request) {
         $this->updateVisits();
 
-        return Content::where('sub_menu_id', $request->get('id', 0))
-            ->where('content.status', true)->orderBy('content.created_at', 'desc')
+        return Content::Join('sub_menu', 'content.sub_menu_id', 'sub_menu.id')
+            ->Join('main_menu', 'sub_menu.main_menu_id', 'main_menu.id')
+            ->where('sub_menu_id', $request->get('id', 0))
+            ->where('content.status', true)
+            ->orderBy('content.created_at', 'desc')
             ->limit(min($request->get('limit', 10), 20))
             ->get(
-                ['id', 'title', 'created_at'],
+                ['main_menu.id as main_menu_id', 'content.sub_menu_id', 'content.id', 'content.title', 'content.created_at'],
             );
     }
 
@@ -72,9 +76,11 @@ class IndexController extends Controller {
 
         $content = [];
         foreach (explode(',', $request->get('id', 0)) as $sub_menu_id) {
-            $content[] = Content::where('sub_menu_id', $sub_menu_id)
+            $content[] = Content::Join('sub_menu', 'content.sub_menu_id', 'sub_menu.id')
+            ->Join('main_menu', 'sub_menu.main_menu_id', 'main_menu.id')
+            ->where('sub_menu_id', $sub_menu_id)
             ->where('content.status', true)
-            ->select('sub_menu_id', 'id', 'title', 'created_at')
+            ->select('main_menu.id as main_menu_id', 'content.sub_menu_id', 'content.id', 'content.title', 'content.created_at')
             ->orderBy('content.created_at', 'desc')
             ->limit(min($request->get('limit', 10), 20));
         }
