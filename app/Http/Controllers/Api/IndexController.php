@@ -155,11 +155,20 @@ class IndexController extends Controller {
         }
 
         $so->close();
-        return Content::whereRaw('ARRAY[title, content] &@~ \'' . implode(' OR ', $keyword) . '\'')
+        return Content::join('sub_menu', 'content.sub_menu_id', 'sub_menu.id')
+            ->join('main_menu', 'sub_menu.main_menu_id', 'main_menu.id')
+            ->whereRaw('ARRAY[title, content] &@~ \'' . implode(' OR ', $keyword) . '\'')
             ->latest()
             ->paginate(
                 (int) $request->get('per_page'),
-                [\DB::raw('\'' . implode(' ', $keyword) . '\' as keyword'), 'id', 'title', 'content', 'created_at'],
+                [   \DB::raw('\'' . implode(' ', $keyword) . '\' as keyword'),
+                    'main_menu.id as main_menu_id',
+                    'content.sub_menu_id as sub_menu_id',
+                    'content.id',
+                    'content.title',
+                    'content.content',
+                    'content.created_at'
+                ],
                 'current_page'
             );
     }
