@@ -159,6 +159,6 @@ class IndexController extends Controller {
     }
 
     public function getHotNews() {
-        return Content::where('hot', true)->where('status', true)->limit(5)->get(['id', 'title']);
+        return Content::where('hot', true)->where('status', true)->limit(5)->get(['id', 'title', 'created_at']);
     }
 }
