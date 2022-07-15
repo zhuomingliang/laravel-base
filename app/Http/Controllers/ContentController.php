@@ -72,7 +72,7 @@ class ContentController extends Controller {
     public function PostIndex(Request $request) {
         try {
             $data = $request->only([
-                'sub_menu_id', 'title', 'content', 'status'
+                'sub_menu_id', 'from', 'title', 'content', 'status'
             ]);
 
             Content::insert($data);
@@ -87,7 +87,7 @@ class ContentController extends Controller {
     public function PutIndex(Request $request) {
         try {
             Content::where('id', (int)$request->get('id', 0))->update($request->only([
-                'sub_menu_id', 'title', 'content', 'status'
+                'sub_menu_id', 'from', 'title', 'content', 'status'
             ]));
         } catch (\Exception $e) {
             return $this->conflict('更新失败');

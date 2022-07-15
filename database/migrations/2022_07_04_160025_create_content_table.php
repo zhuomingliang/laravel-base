@@ -14,6 +14,7 @@ return new class extends Migration {
         Schema::create('content', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('sub_menu_id');
+            $table->string('from')->comment('来源');
             $table->string('title')->comment('标题');
             $table->text('content')->comment('内容');
             $table->integer('views')->default(0)->comment('访问次数');

@@ -109,6 +109,7 @@ class IndexController extends Controller {
             [   'main_menu.id as main_menu_id',
                 'sub_menu_id as sub_menu_id',
                 'content.id',
+                'content.from',
                 'content.title',
                 'content.content',
                 'content.views',
