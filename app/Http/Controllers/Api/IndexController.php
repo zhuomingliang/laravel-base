@@ -173,7 +173,7 @@ class IndexController extends Controller {
         }
 
         try {
-            $result = $query->paginate(
+            return $query->paginate(
                 (int) $request->get('per_page'),
                 [   \DB::raw('\'' . implode(' ', $keyword) . '\' as keyword'),
                                 'main_menu.id as main_menu_id',
@@ -184,16 +184,7 @@ class IndexController extends Controller {
                                 'content.created_at'
                             ],
                 'current_page'
-            )->toArray();
-
-            $data = [];
-            foreach ($result['data'] as $_data) {
-                $_data['content'] = strip_tags($_data['content']);
-                $data[] = $_data;
-            }
-
-            $result['data'] = $data;
-            return $result;
+            );
         } catch (\Exception $e) {
             return $this->noContent();
         }
