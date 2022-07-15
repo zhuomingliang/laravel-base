@@ -168,22 +168,31 @@ class IndexController extends Controller {
             ->whereRaw('ARRAY[title, content] &@~ \'' . implode(' OR ', $keyword) . '\'');
 
         if ($end_time = $request->get('end_time', '')) {
-            $query->where('content.created_at', '<', $end_time);
+            $query->where('content.created_at', '>', $end_time);
         }
 
         try {
-            return $query->paginate(
+            $result = $query->paginate(
                 (int) $request->get('per_page'),
                 [   \DB::raw('\'' . implode(' ', $keyword) . '\' as keyword'),
-                    'main_menu.id as main_menu_id',
-                    'content.sub_menu_id as sub_menu_id',
-                    'content.id',
-                    'content.title',
-                    'content.content',
-                    'content.created_at'
-                ],
+                                'main_menu.id as main_menu_id',
+                                'content.sub_menu_id as sub_menu_id',
+                                'content.id',
+                                'content.title',
+                                'content.content',
+                                'content.created_at'
+                            ],
                 'current_page'
-            );
+            )->toArray();
+
+            $data = [];
+            foreach ($result['data'] as $_data) {
+                $_data['content'] = strip_tags($_data['content']);
+                $data[] = $_data;
+            }
+
+            $result['data'] = $data;
+            return $result;
         } catch (\Exception $e) {
             return $this->noContent();
         }
