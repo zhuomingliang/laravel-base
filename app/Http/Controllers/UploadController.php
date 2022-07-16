@@ -26,7 +26,7 @@ class UploadController extends Controller {
         ]);
 
 
-        $path = $request->file('file')->store('video');
+        $path = $request->file('file')->store('video/' . date('Y-m-d'));
 
         return ['url' => $path];
     }
@@ -39,7 +39,7 @@ class UploadController extends Controller {
         ]);
 
 
-        $path = $request->file('file')->store('files');
+        $path = $request->file('file')->store('files/' . date('Y-m-d'));
 
         return  ['url' => $path];
     }
