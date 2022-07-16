@@ -13,7 +13,7 @@ class UploadController extends Controller {
         ]);
 
 
-        $path = $request->file('file')->store('images');
+        $path = $request->file('file')->store('images/' . date('Y-m-d'));
 
         return ['url' => $path];
     }
