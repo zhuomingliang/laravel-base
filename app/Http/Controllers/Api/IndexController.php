@@ -124,7 +124,8 @@ class IndexController extends Controller {
     }
 
     public function getHomepageCarsoul(Request $request) {
-        return Carsoul::orderBy('module_id', 'asc')
+        return Carsoul::where('status', true)
+            ->orderBy('module_id', 'asc')
             ->orderBy('order', 'asc')->get(['module_id', 'image', 'title', 'link']);
     }
 
