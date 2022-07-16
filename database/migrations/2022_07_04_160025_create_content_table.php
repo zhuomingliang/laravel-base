@@ -31,7 +31,8 @@ return new class extends Migration {
         });
 
         \DB::select('CREATE EXTENSION IF NOT EXISTS pgroonga;');
-        \DB::select('CREATE INDEX ON content USING pgroonga ((ARRAY[title, content]));');
+        \DB::select('CREATE INDEX ON content USING pgroonga (title);');
+        \DB::select('CREATE INDEX ON content USING pgroonga (content);');
     }
 
     /**

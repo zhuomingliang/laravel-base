@@ -166,7 +166,10 @@ class IndexController extends Controller {
         $so->close();
         $query =  Content::join('sub_menu', 'content.sub_menu_id', 'sub_menu.id')
             ->join('main_menu', 'sub_menu.main_menu_id', 'main_menu.id')
-            ->whereRaw('ARRAY[title, content] &@~ \'' . implode(' OR ', $keyword) . '\'');
+            ->where(function ($query) use ($keyword) {
+                $query->whereRaw('title &@~ \'' . implode(' OR ', $keyword) . '\'')
+                    ->orWhereRaw('content &@~ \'' . implode(' OR ', $keyword) . '\'');
+            });
 
         if ($end_time = $request->get('end_time', '')) {
             $query->where('content.created_at', '>', $end_time);
