@@ -45,7 +45,7 @@ Route::post('/sanctum/token', function (Request $request) {
     return $user->createToken($request->device_name)->plainTextToken;
 });
 
-Route::group(['namespace'=>'App\Http\Controllers\Api', 'middleware' => 'throttle:100,1'], function () {
+Route::group(['namespace'=>'App\Http\Controllers\Api', 'middleware' => 'throttle:120,1'], function () {
     Route::any('index', 'IndexController@index');
     Route::get('getMainMenu', 'IndexController@getMainMenu');
     Route::any('getSubMenuByMainMenuId', 'IndexController@getSubMenuByMainMenuId');
