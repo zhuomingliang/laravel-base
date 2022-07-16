@@ -58,8 +58,6 @@ class IndexController extends Controller {
     }
 
     public function getLastNContentListBySubMenuId(Request $request) {
-        $this->updateVisits();
-
         return Content::Join('sub_menu', 'content.sub_menu_id', 'sub_menu.id')
             ->Join('main_menu', 'sub_menu.main_menu_id', 'main_menu.id')
             ->where('sub_menu_id', $request->get('id', 0))
