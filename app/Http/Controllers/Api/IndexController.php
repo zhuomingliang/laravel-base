@@ -143,7 +143,7 @@ class IndexController extends Controller {
             $result['today'] = Visits::where('date', date('Y-m-d'))->first(['date', 'views']);
             $result['yesterday'] = Visits::where('date', date('Y-m-d', strtotime("-1 day")))->first(['date', 'views']);
             $result['max'] = Visits::orderBy('views', 'desc')->first(['date', 'views']);
-            $result['average'] = Visits::first([\DB::raw('avg("views")')]);
+            $result['average'] = Visits::first([\DB::raw('round(avg("views")) as avg')]);
 
             return $result;
         });
