@@ -145,6 +145,9 @@ class IndexController extends Controller {
             $result['max'] = Visits::orderBy('views', 'desc')->first(['date', 'views']);
             $result['average'] = Visits::first([\DB::raw('round(avg("views")) as avg')]);
 
+            if ($result['yesterday'] === null) {
+                $result['yesterday'] = ['date' => date('Y-m-d', strtotime("-1 day")), 'views' => 0];
+            }
             return $result;
         });
     }
