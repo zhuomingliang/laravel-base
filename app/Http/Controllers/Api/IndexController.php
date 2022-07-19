@@ -148,6 +148,11 @@ class IndexController extends Controller {
             if ($result['yesterday'] === null) {
                 $result['yesterday'] = ['date' => date('Y-m-d', strtotime("-1 day")), 'views' => 0];
             }
+
+            if ($result['today'] === null) {
+                $result['today'] = ['date' => date('Y-m-d', strtotime("-1 day")), 'views' => 1];
+            }
+
             return $result;
         });
     }
